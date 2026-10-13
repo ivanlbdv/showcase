@@ -1,0 +1,240 @@
+:root {
+  --page: #f6f6f3;
+  --surface: #ffffff;
+  --ink: #171716;
+  --muted: #74746f;
+  --line: #deded9;
+  --radius: 2px;
+
+  --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  font: inherit;
+}
+
+.container {
+  display: flex;
+  width: min(100% - 40px, 1280px);
+  min-height: 100svh;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+/* Верхняя техническая панель */
+
+.topbar {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.status::before {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ink);
+  content: "";
+}
+
+/* Основной экран ошибки */
+
+.error {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.7fr);
+  align-items: end;
+  flex: 1;
+  gap: 64px;
+  padding: 76px 0 56px;
+}
+
+.error__eyebrow {
+  margin-bottom: 19px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.error__code {
+  font-family: var(--font-mono);
+  font-size: clamp(82px, 15vw, 190px);
+  font-weight: 400;
+  letter-spacing: -0.105em;
+  line-height: 0.72;
+}
+
+.error__title {
+  max-width: 760px;
+  margin-top: 35px;
+  font-size: clamp(37px, 4.5vw, 64px);
+  font-weight: 350;
+  letter-spacing: -0.055em;
+  line-height: 1.01;
+}
+
+.error__title strong {
+  font-weight: 600;
+}
+
+.error__aside {
+  max-width: 360px;
+  padding-bottom: 8px;
+}
+
+.error__text {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.error__action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: #ffffff;
+  padding: 13px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.error__action::after {
+  content: "→";
+  font-size: 17px;
+  line-height: 0;
+}
+
+.error__action:hover,
+.error__action:focus-visible {
+  background: var(--surface);
+  color: var(--ink);
+  outline: none;
+}
+
+.error__action:focus-visible {
+  box-shadow: 0 0 0 3px rgba(23, 23, 22, 0.14);
+}
+
+/* Нижняя строка */
+
+.error__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+  border-top: 1px solid var(--line);
+  padding: 20px 0 32px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* Мобильная версия */
+
+@media (max-width: 680px) {
+  .container {
+    width: min(100% - 32px, 1280px);
+  }
+
+  .topbar {
+    min-height: 72px;
+  }
+
+  .status {
+    font-size: 10px;
+  }
+
+  .error {
+    display: block;
+    padding: 58px 0 48px;
+  }
+
+  .error__code {
+    font-size: clamp(88px, 28vw, 138px);
+  }
+
+  .error__title {
+    margin-top: 31px;
+    font-size: clamp(38px, 11vw, 54px);
+  }
+
+  .error__aside {
+    margin-top: 35px;
+  }
+
+  .error__text {
+    font-size: 14px;
+  }
+
+  .error__meta {
+    display: block;
+  }
+
+  .error__meta span + span {
+    display: block;
+    margin-top: 10px;
+  }
+}

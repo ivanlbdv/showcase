@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    name="description"
+    content="Витрина офферов по займам от микрофинансовых организаций."
+  >
+
+  <title>Свод - предложения по займам</title>
+
+  <link
+    rel="stylesheet"
+    href="{% static 'showcase/css/showcase.css' %}"
+  >
+</head>
+
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        Свод
+      </a>
+
+      <p class="status">
+        {% if last_product_date %}
+          {% if is_updated_today %}
+            Витрина офферов · обновлено сегодня
+          {% else %}
+            Витрина офферов · обновлено {{ last_product_date|date:"d.m.Y" }}
+          {% endif %}
+        {% else %}
+          Витрина офферов
+        {% endif %}
+      </p>
+    </header>
+
+    <section class="hero" aria-labelledby="showcase-title">
+      <h1 id="showcase-title" class="hero__title">
+        Небольшие суммы.
+        <br>
+          <strong>Понятные условия.</strong>
+        </br>
+      </h1>
+
+      <p class="hero__note">
+        Выберите подходящее предложение от микрофинансовых организаций.
+        Сравните параметры и переходите к оформлению напрямую.
+      </p>
+    </section>
+
+    <nav class="filters" aria-label="Фильтрация предложений">
+      <button
+        class="filter is-active"
+        type="button"
+        data-filter="all"
+        aria-pressed="true"
+      >
+        Все предложения
+      </button>
+
+      <button
+        class="filter"
+        type="button"
+        data-filter="new"
+        aria-pressed="false"
+      >
+        Новым клиентам
+      </button>
+
+      <button
+        class="filter"
+        type="button"
+        data-filter="short_term"
+        aria-pressed="false"
+      >
+        До 30 дней
+      </button>
+
+      <button
+        class="filter"
+        type="button"
+        data-filter="long_term"
+        aria-pressed="false"
+      >
+        Длительный срок
+      </button>
+    </nav>
+
+    <section
+      class="products"
+      aria-label="Список финансовых предложений"
+    >
+      {% for product in products %}
+        <article
+          class="card"
+          data-categories="{{ product.category }}{% if product.is_for_new_clients %} new{% endif %}"
+        >
+          <div>
+            <div class="card__top">
+              <div>
+                <p class="card__category">
+                  {{ product.provider_name }}
+                </p>
+
+                <h2 class="card__title">
+                  {{ product.title }}
+                </h2>
+              </div>
+
+              <span
+                class="card__number"
+                aria-label="Номер предложения {{ forloop.counter }}"
+              >
+                {{ forloop.counter|stringformat:"02d" }}
+              </span>
+            </div>
+
+            <div class="card__data">
+              <div class="metric">
+                <span class="metric__label">Сумма</span>
+                <strong class="metric__value">
+                  {{ product.amount_text }}
+                </strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric__label">Срок</span>
+                <strong class="metric__value">
+                  {{ product.term_text }}
+                </strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric__label">Ставка</span>
+                <strong class="metric__value">
+                  {{ product.rate_text }}
+                </strong>
+              </div>
+
+              <div class="metric">
+                <span class="metric__label">
+                  {{ product.feature_label }}
+                </span>
+                <strong class="metric__value">
+                  {{ product.feature_value }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card__bottom">
+            {% if product.description %}
+              <p class="card__description">
+                {{ product.description }}
+              </p>
+            {% endif %}
+
+            <a
+              class="card__action"
+              href="{{ product.product_url }}"
+              target="_blank"
+              rel="nofollow sponsored noopener"
+              aria-label="Смотреть условия продукта: {{ product.title }}"
+            >
+              Смотреть условия
+            </a>
+          </div>
+        </article>
+      {% empty %}
+        <p class="products__empty">
+          Сейчас нет доступных предложений.
+        </p>
+      {% endfor %}
+    </section>
+
+    <footer class="disclaimer">
+      <p>
+        Информация на странице носит ознакомительный характер и не является
+        публичной офертой. Перед оформлением ознакомьтесь с полной
+        стоимостью займа, условиями договора и правилами выбранной
+        микрофинансовой организации.
+      </p>
+
+      <span class="disclaimer__age">18+</span>
+    </footer>
+  </main>
+
+  <script src="{% static 'showcase/js/showcase.js' %}"></script>
+</body>
+</html>
