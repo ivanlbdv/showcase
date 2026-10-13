@@ -1,7 +1,45 @@
-{% include "errors/_error_page.html" with
-  error_code="403"
-  error_eyebrow="Ограниченный доступ"
-  error_title_before="Недостаточно"
-  error_title_emphasis="прав доступа."
-  error_description="Эта страница недоступна для текущего пользователя. Проверьте ссылку или вернитесь к витрине предложений."
-%}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>403 - Доступ запрещен</title>
+  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        Свод
+      </a>
+      <p class="status">Служебная страница</p>
+    </header>
+
+    <section class="error" aria-labelledby="error-title">
+      <div class="error__main">
+        <p class="error__eyebrow">Ограниченный доступ</p>
+        <p class="error__code" aria-label="Код ошибки 403">403</p>
+        <h1 id="error-title" class="error__title">
+          Недостаточно
+          <br>
+            <strong>
+              прав доступа.
+            </strong>
+          </br>
+        </h1>
+      </div>
+
+      <div class="error__aside">
+        <p class="error__text">
+          Эта страница недоступна для текущего пользователя. Проверьте ссылку или вернитесь к витрине предложений.
+        </p>
+        <a class="error__action" href="{% url 'showcase:product_showcase' %}">
+          Вернуться к витрине
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

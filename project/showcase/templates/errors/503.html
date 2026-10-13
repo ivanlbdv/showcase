@@ -1,7 +1,46 @@
-{% include "errors/_error_page.html" with
-  error_code="503"
-  error_eyebrow="Техническая пауза"
-  error_title_before="Сервис"
-  error_title_emphasis="временно недоступен."
-  error_description="Мы проводим технические работы. Попробуйте обновить страницу немного позже."
-%}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>503 - Сервис недоступен</title>
+  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        Свод
+      </a>
+      <p class="status">Служебная страница</p>
+    </header>
+
+    <section class="error" aria-labelledby="error-title">
+      <div class="error__main">
+        <p class="error__eyebrow">Техническая пауза</p>
+        <p class="error__code" aria-label="Код ошибки 503">503</p>
+        <h1 id="error-title" class="error__title">
+          Сервис
+          <strong>
+            временно
+            <br>
+              недоступен.
+            </br>
+          </strong>
+        </h1>
+      </div>
+
+      <div class="error__aside">
+        <p class="error__text">
+          Мы проводим технические работы. Попробуйте обновить страницу немного позже.
+        </p>
+        <a class="error__action" href="{% url 'showcase:product_showcase' %}">
+          Вернуться к витрине
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

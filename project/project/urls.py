@@ -17,16 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from showcase import error_views
+from showcase.error_views import service_unavailable
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Адрес для ручной проверки страницы 503.
-    path(
-        'technical-break/',
-        error_views.service_unavailable,
-        name='service_unavailable',
-    ),
+    path('technical-break/', service_unavailable, name='service_unavailable'),
     path('', include('showcase.urls')),
 ]
 

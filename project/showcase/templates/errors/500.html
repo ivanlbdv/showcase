@@ -1,7 +1,46 @@
-{% include "errors/_error_page.html" with
-  error_code="500"
-  error_eyebrow="Непредвиденная ошибка"
-  error_title_before="Что-то"
-  error_title_emphasis="пошло не так."
-  error_description="Мы уже получили информацию о проблеме. Вернитесь к витрине или повторите попытку позже."
-%}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>500 - Внутренняя ошибка сервера</title>
+  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        Свод
+      </a>
+      <p class="status">Служебная страница</p>
+    </header>
+
+    <section class="error" aria-labelledby="error-title">
+      <div class="error__main">
+        <p class="error__eyebrow">Непредвиденная ошибка</p>
+        <p class="error__code" aria-label="Код ошибки 500">500</p>
+        <h1 id="error-title" class="error__title">
+          Что-то
+          <strong>
+            пошло
+            <br>
+              не так.
+            </br>
+          </strong>
+        </h1>
+      </div>
+
+      <div class="error__aside">
+        <p class="error__text">
+          Мы уже получили информацию о проблеме. Вернитесь к витрине или повторите попытку позже.
+        </p>
+        <a class="error__action" href="{% url 'showcase:product_showcase' %}">
+          Вернуться к витрине
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -25,7 +25,16 @@ def error_404(request, exception):
     )
 
 
-def error_500(request):
+def error_404_preview(request):
+    """
+    Тестовая функция для принудительного отображения шаблона 404.
+    Используется ТОЛЬКО для проверки дизайна в режиме DEBUG=True.
+    """
+    # Путь должен быть относительно папки templates внутри приложения showcase
+    return render(request, 'errors/503.html', status=404)
+
+
+def error_500(request, exception=None):
     return render(
         request,
         'errors/500.html',
