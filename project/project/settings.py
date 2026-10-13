@@ -30,6 +30,12 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+# Режим технических работ
+MAINTENANCE_MODE = False
+MAINTENANCE_ALLOWED_IPS = [
+    '127.0.0.1',
+    '::1',
+]
 
 # Application definition
 
@@ -46,6 +52,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'showcase.middleware.MaintenanceModeMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
