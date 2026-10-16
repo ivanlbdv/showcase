@@ -4,8 +4,40 @@ from django.db import models
 
 class Product(models.Model):
     class Category(models.TextChoices):
-        SHORT_TERM = "short_term", "До 30 дней"
-        LONG_TERM = "long_term", "Длительный срок"
+        SHORT_TERM = 'short_term', 'До 30 дней'
+        LONG_TERM = 'long_term', 'Длительный срок'
+
+    # Технические поля внешнего источника.
+    # У существующих ручных карточек source будет "manual",
+    # а external_id останется NULL.
+    source = models.CharField(
+        verbose_name="Источник данных",
+        max_length=50,
+        default="manual",
+        editable=False,
+    )
+
+    external_id = models.CharField(
+        verbose_name="ID во внешней системе",
+        max_length=100,
+        null=True,
+        blank=True,
+        editable=False,
+    )
+
+    external_modified_at = models.DateTimeField(
+        verbose_name="Дата изменения у партнёра",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+
+    logo_url = models.URLField(
+        verbose_name="URL логотипа",
+        max_length=500,
+        blank=True,
+        editable=False,
+    )
 
     provider_name = models.CharField(
         verbose_name="Название МФО / банка",
@@ -35,19 +67,19 @@ class Product(models.Model):
     amount_text = models.CharField(
         verbose_name="Сумма",
         max_length=100,
-        help_text="Например: до 30 000 ₽.",
+        help_text="Например: от 1 000 до 30 000 ₽.",
     )
 
     term_text = models.CharField(
         verbose_name="Срок",
         max_length=100,
-        help_text="Например: до 30 дней.",
+        help_text="Например: от 1 до 30 дней.",
     )
 
     rate_text = models.CharField(
         verbose_name="Ставка",
         max_length=100,
-        help_text="Например: от 0% в день.",
+        help_text="Например: 0,8%.",
     )
 
     feature_label = models.CharField(
@@ -98,9 +130,16 @@ class Product(models.Model):
     )
 
     class Meta:
-        verbose_name = "Банковский продукт"
-        verbose_name_plural = "Банковские продукты"
-        ordering = ("sort_order", "-created_at")
+        verbose_name = "Финансовое предложение"
+        verbose_name_plural = "Финансовые предложения"
+        ordering = ("sort_order", "-created_at", "id")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("source", "external_id"),
+                condition=models.Q(external_id__isnull=False),
+                name="unique_product_source_external_id",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.provider_name} — {self.title}"

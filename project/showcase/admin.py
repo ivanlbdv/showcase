@@ -6,85 +6,105 @@ from .models import Product
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        "provider_name",
-        "title",
-        "category",
-        "is_for_new_clients",
-        "amount_text",
-        "term_text",
-        "is_active",
-        "sort_order",
-        "created_at",
+        'provider_name',
+        'title',
+        'source',
+        'external_id',
+        'category',
+        'is_for_new_clients',
+        'amount_text',
+        'term_text',
+        'is_active',
+        'sort_order',
+        'created_at',
     )
 
     list_filter = (
-        "is_active",
-        "is_for_new_clients",
-        "category",
+        'source',
+        'is_active',
+        'is_for_new_clients',
+        'category',
     )
 
     search_fields = (
-        "provider_name",
-        "title",
-        "description",
+        'provider_name',
+        'title',
+        'description',
+        'external_id',
     )
 
     list_editable = (
-        "is_active",
-        "sort_order",
+        'is_active',
+        'sort_order',
     )
 
     readonly_fields = (
-        "created_at",
-        "updated_at",
+        'source',
+        'external_id',
+        'external_modified_at',
+        'logo_url',
+        'created_at',
+        'updated_at',
     )
 
     ordering = (
-        "sort_order",
-        "-created_at",
+        'sort_order',
+        '-created_at',
+        'id',
     )
 
     fieldsets = (
         (
-            "Основная информация",
+            'Источник данных',
             {
-                "fields": (
-                    "provider_name",
-                    "title",
-                    "category",
-                    "is_for_new_clients",
+                'fields': (
+                    'source',
+                    'external_id',
+                    'external_modified_at',
+                    'logo_url',
                 ),
             },
         ),
         (
-            "Условия продукта",
+            'Основная информация',
             {
-                "fields": (
-                    "amount_text",
-                    "term_text",
-                    "rate_text",
-                    "feature_label",
-                    "feature_value",
-                    "description",
-                    "product_url",
+                'fields': (
+                    'provider_name',
+                    'title',
+                    'category',
+                    'is_for_new_clients',
                 ),
             },
         ),
         (
-            "Публикация на витрине",
+            'Условия продукта',
             {
-                "fields": (
-                    "is_active",
-                    "sort_order",
+                'fields': (
+                    'amount_text',
+                    'term_text',
+                    'rate_text',
+                    'feature_label',
+                    'feature_value',
+                    'description',
+                    'product_url',
                 ),
             },
         ),
         (
-            "Служебная информация",
+            'Публикация на витрине',
             {
-                "fields": (
-                    "created_at",
-                    "updated_at",
+                'fields': (
+                    'is_active',
+                    'sort_order',
+                ),
+            },
+        ),
+        (
+            'Служебная информация',
+            {
+                'fields': (
+                    'created_at',
+                    'updated_at',
                 ),
             },
         ),
