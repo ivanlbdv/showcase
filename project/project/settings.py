@@ -31,10 +31,10 @@ SECRET_KEY = 'django-insecure-s0=h^@4j6qpof3zn%=g6f99kplx(erdl43as5g(ip4_2=5&%28
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-]
+ALLOWED_HOSTS = os.environ.get(
+    'DJANGO_ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 
 # Режим технических работ
 MAINTENANCE_MODE = False
@@ -134,16 +134,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Leads.su API
 LEADS_API_TOKEN = os.environ.get('LEADS_API_TOKEN', '')
