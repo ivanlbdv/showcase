@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -11,14 +13,14 @@ class Product(models.Model):
     # У существующих ручных карточек source будет "manual",
     # а external_id останется NULL.
     source = models.CharField(
-        verbose_name="Источник данных",
+        verbose_name="Источник",
         max_length=50,
         default="manual",
         editable=False,
     )
 
     external_id = models.CharField(
-        verbose_name="ID во внешней системе",
+        verbose_name="ID внешн.",
         max_length=100,
         null=True,
         blank=True,
@@ -36,11 +38,10 @@ class Product(models.Model):
         verbose_name="URL логотипа",
         max_length=500,
         blank=True,
-        editable=False,
     )
 
     provider_name = models.CharField(
-        verbose_name="Название МФО / банка",
+        verbose_name="Название МФО",
         max_length=120,
         help_text="Например: МФО «Пример».",
     )
@@ -59,7 +60,7 @@ class Product(models.Model):
     )
 
     is_for_new_clients = models.BooleanField(
-        verbose_name="Предложение для новых клиентов",
+        verbose_name="Для новых клиентов",
         default=False,
         help_text="Карточка будет отображаться по фильтру «Новым клиентам».",
     )
@@ -82,17 +83,11 @@ class Product(models.Model):
         help_text="Например: 0,8%.",
     )
 
-    feature_label = models.CharField(
-        verbose_name="Название дополнительного параметра",
+    psk_text = models.CharField(
+        verbose_name="ПСК",
         max_length=100,
-        default="Решение",
-        help_text="Например: Решение, Получение, Документы.",
-    )
-
-    feature_value = models.CharField(
-        verbose_name="Значение дополнительного параметра",
-        max_length=100,
-        help_text="Например: за 5 минут.",
+        blank=True,
+        help_text="Например: 281,00 – 292,00%.",
     )
 
     description = models.TextField(
@@ -107,9 +102,27 @@ class Product(models.Model):
         help_text="Полный URL страницы продукта или партнёрская ссылка.",
     )
 
+    is_priority_offer = models.BooleanField(
+        verbose_name="Приоритет",
+        default=False,
+        help_text=(
+            "Приоритетные офферы показываются первыми "
+            "и выделяются на витрине."
+        ),
+    )
+
     is_active = models.BooleanField(
         verbose_name="Показывать на витрине",
         default=True,
+    )
+
+    other_epc = models.DecimalField(
+        verbose_name="EPC",
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00"),
+        editable=False,
+        help_text="Доход на 100 кликов по данным Leads.su. Используется для сортировки витрины.",
     )
 
     sort_order = models.PositiveIntegerField(

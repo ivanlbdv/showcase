@@ -99,15 +99,20 @@
     >
       {% for product in products %}
         <article
-          class="card"
+          class="card{% if product.is_priority_offer %} card--priority{% endif %}"
           data-categories="{{ product.category }}{% if product.is_for_new_clients %} new{% endif %}"
         >
           <div>
             <div class="card__top">
               <div>
-                <p class="card__category">
-                  {{ product.provider_name }}
-                </p>
+                {% if product.logo_url %}
+                  <img
+                    class="card__logo"
+                    src="{{ product.logo_url }}"
+                    alt="Логотип {{ product.provider_name }}"
+                    loading="lazy"
+                  >
+                {% endif %}
 
                 <h2 class="card__title">
                   {{ product.title }}
@@ -138,30 +143,23 @@
               </div>
 
               <div class="metric">
+                <span class="metric__label">ПСК</span>
+                <strong class="metric__value">
+                  {{ product.psk_text }}
+                </strong>
+              </div>
+
+              <div class="metric">
                 <span class="metric__label">Ставка</span>
                 <strong class="metric__value">
                   {{ product.rate_text }}
                 </strong>
               </div>
-
-              <div class="metric">
-                <span class="metric__label">
-                  {{ product.feature_label }}
-                </span>
-                <strong class="metric__value">
-                  {{ product.feature_value }}
-                </strong>
-              </div>
             </div>
           </div>
 
-          <div class="card__bottom">
-            {% if product.description %}
-              <p class="card__description">
-                {{ product.description }}
-              </p>
-            {% endif %}
 
+          <div class="card__bottom">
             <a
               class="card__action"
               href="{{ product.product_url }}"

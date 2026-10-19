@@ -1,0 +1,241 @@
+/* ============================================================
+   Свод · стили админки (production)
+   Опирается на CSS-переменные Django Admin, ничего не ломает.
+
+   Важно: все правила для колонок списка действуют ТОЛЬКО
+   внутри таблицы #result_list, чтобы не задевать форму
+   редактирования карточки (там у строк такие же классы
+   field-<имя поля>).
+   ============================================================ */
+
+#branding h1 {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.module h2,
+.module caption {
+  font-weight: 700;
+}
+
+/* ---------- Список офферов ---------- */
+
+/* Прокрутка на уровне таблицы: ползунок сразу под таблицей,
+   а не внизу всей страницы */
+#changelist .results {
+  overflow-x: auto;
+}
+
+/* Липкая шапка: названия столбцов видны при прокрутке */
+#result_list thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--darkened-bg, #f8f8f8);
+}
+
+/* Чередование строк и зелёная подсветка при наведении */
+#result_list tbody tr:nth-child(even) {
+  background: rgba(11, 18, 32, 0.015);
+}
+
+#result_list tbody tr:hover {
+  background: #e7f8ef;
+}
+
+#result_list {
+  font-size: 13px;
+  min-width: 0;
+}
+
+#changelist .paginator {
+  font-size: 12px;
+}
+
+/* --- Колонки: ТОЛЬКО в таблице списка --- */
+
+/* Приоритет — узкая колонка */
+#result_list td.field-is_priority_offer {
+  width: 48px;
+  text-align: center;
+}
+
+#result_list th.column-is_priority_offer {
+  width: 48px;
+  white-space: normal;
+}
+
+/* Активный — узкая колонка */
+#result_list td.field-active_badge {
+  width: 44px;
+}
+
+/* Логотип */
+#result_list td.field-logo_preview {
+  width: 58px;
+}
+
+.logo-thumb {
+  display: block;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid var(--border-color, #e3e7ed);
+}
+
+/* Название МФО */
+#result_list td.field-provider_name {
+  min-width: 130px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Срок */
+#result_list td.field-category_badge {
+  width: 64px;
+}
+
+/* Фильтр «Новым» */
+#result_list td.field-new_clients_badge {
+  width: 48px;
+  text-align: center;
+}
+
+/* Условия — блок из трёх строк */
+#result_list td.field-conditions {
+  min-width: 190px;
+}
+
+.cond-line {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cond-line--main {
+  font-weight: 600;
+}
+
+.cond-line--muted {
+  color: var(--body-quiet-color, #6b7787);
+  font-size: 11px;
+}
+
+/* EPC */
+#result_list td.field-epc_preview {
+  width: 70px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.epc {
+  font-weight: 600;
+}
+
+.epc--zero {
+  color: var(--body-quiet-color, #6b7787);
+  font-weight: 400;
+}
+
+/* Источник — цветной чип */
+#result_list td.field-source_badge {
+  width: 80px;
+}
+
+.source-chip {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.source-chip--leads_su {
+  background: #e7f8ef;
+  color: #0e9356;
+}
+
+.source-chip--manual {
+  background: #eef1f4;
+  color: #5b6472;
+}
+
+/* Порядок показа */
+#result_list td.field-sort_order {
+  width: 64px;
+}
+
+/* Ссылка-иконка */
+#result_list td.field-product_link {
+  width: 36px;
+  text-align: center;
+}
+
+.ext-link {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ext-link:hover {
+  text-decoration: none;
+}
+
+/* Обновлено */
+#result_list td.field-updated_preview {
+  white-space: nowrap;
+  font-size: 10px;
+  color: var(--body-quiet-color, #6b7787);
+}
+
+/* ---------- Форма карточки ---------- */
+
+/* Помощники к полям всегда видны полностью */
+.form-row p.help,
+.form-row .help {
+  white-space: normal;
+}
+
+/* Чекбоксам — нормальный размер и выравнивание */
+.form-row .checkbox_row {
+  min-height: auto;
+}
+
+/* Служебные (read-only) поля — приглушённо */
+#product_form .readonly {
+  color: var(--body-quiet-color, #6b7787);
+}
+
+/* Панель сохранения — аккуратный радиус */
+.submit-row {
+  border-radius: 8px;
+}
+
+/* Кнопка синхронизации в шапке списка */
+.object-tools a.sync-button,
+.object-tools li a.sync-button {
+  display: inline-block;
+  background: #12b76a;
+  color: #ffffff;
+  border: 1px solid #0e9356;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.object-tools a.sync-button:hover,
+.object-tools a.sync-button:focus-visible {
+  background: #0e9356;
+  color: #ffffff;
+  text-decoration: none;
+}

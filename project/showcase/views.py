@@ -4,10 +4,24 @@ from django.utils import timezone
 
 from .models import Product
 
+# Максимум карточек на витрине независимо от размера базы.
+MAX_SHOWCASE_OFFERS = 10
+
 
 def product_showcase(request):
-    # На витрину выводятся только активные предложения.
-    products = Product.objects.filter(is_active=True)
+    # На витрину выводятся только активные предложения,
+    # не более MAX_SHOWCASE_OFFERS в порядке сортировки:
+    # приоритетные, затем по sort_order, затем по дате.
+    products = list(
+        Product.objects.filter(is_active=True)
+        .order_by(
+            "-is_priority_offer",
+            "-other_epc",
+            "sort_order",
+            "-created_at",
+            "id",
+        )[:MAX_SHOWCASE_OFFERS]
+    )
 
     # В статусе учитываются вообще все карточки из базы:
     # активные и отключенные.

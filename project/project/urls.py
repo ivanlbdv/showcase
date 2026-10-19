@@ -22,6 +22,10 @@ urlpatterns = [
     path('', include('showcase.urls')),
 ]
 
+admin.site.site_header = "Свод · управление витриной"
+admin.site.site_title = "Свод · админка"
+admin.site.index_title = "Разделы управления"
+
 handler400 = 'showcase.error_views.error_400'
 handler403 = 'showcase.error_views.error_403'
 handler404 = 'showcase.error_views.error_404'
