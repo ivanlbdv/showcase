@@ -1,0 +1,120 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Свод · {{ product.provider_name }}{% endblock %}
+
+{% block content %}
+  <section class="editor">
+    <header class="editor__head">
+      <div>
+        <h1 class="editor__title">{{ product.provider_name }}</h1>
+        <p class="editor__meta">
+          ID: {{ product.external_id|default:"—" }} · EPC {{ product.other_epc|floatformat:"-2" }} · источник: {{ product.source }}
+        </p>
+      </div>
+
+      <a class="btn btn--ghost" href="{% url 'showcase:dashboard' %}">← К списку</a>
+    </header>
+
+    <form method="post" class="editor__form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="notice notice--error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <fieldset class="panel">
+        <h2 class="panel__title">Публикация</h2>
+
+        <div class="panel__grid">
+          <label class="field field--check">
+            {{ form.is_active }}
+            <span class="field__label">{{ form.is_active.label }}</span>
+          </label>
+
+          <label class="field field--check">
+            {{ form.is_priority_offer }}
+            <span class="field__label">{{ form.is_priority_offer.label }}</span>
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.sort_order.label }}</span>
+            {{ form.sort_order }}
+            {% if form.sort_order.help_text %}<span class="field__help">{{ form.sort_order.help_text }}</span>{% endif %}
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <h2 class="panel__title">Что видит пользователь</h2>
+
+        <div class="panel__grid">
+          <label class="field">
+            <span class="field__label">{{ form.provider_name.label }}</span>
+            {{ form.provider_name }}
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.title.label }}</span>
+            {{ form.title }}
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.category.label }}</span>
+            {{ form.category }}
+          </label>
+
+          <label class="field field--check">
+            {{ form.is_for_new_clients }}
+            <span class="field__label">{{ form.is_for_new_clients.label }}</span>
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.amount_text.label }}</span>
+            {{ form.amount_text }}
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.term_text.label }}</span>
+            {{ form.term_text }}
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.rate_text.label }}</span>
+            {{ form.rate_text }}
+          </label>
+
+          <label class="field">
+            <span class="field__label">{{ form.psk_text.label }}</span>
+            {{ form.psk_text }}
+          </label>
+
+          <label class="field field--wide">
+            <span class="field__label">{{ form.logo_url.label }}</span>
+            {{ form.logo_url }}
+          </label>
+
+          <label class="field field--wide">
+            <span class="field__label">{{ form.product_url.label }}</span>
+            {{ form.product_url }}
+          </label>
+
+          <label class="field field--wide">
+            <span class="field__label">{{ form.description.label }}</span>
+            {{ form.description }}
+          </label>
+        </div>
+
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class="notice notice--error">{{ field.label }}: {{ error }}</div>
+          {% endfor %}
+        {% endfor %}
+      </fieldset>
+
+      <div class="editor__actions">
+        <button class="btn btn--primary" type="submit">Сохранить</button>
+        <a class="btn btn--ghost" href="{% url 'showcase:dashboard' %}">Отмена</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

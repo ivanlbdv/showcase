@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}Свод · кабинет{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'showcase/css/dashboard.css' %}">
+</head>
+
+<body>
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:dashboard' %}">Свод</a>
+
+      <nav class="topbar__nav">
+        <a class="topbar__link" href="{% url 'showcase:product_showcase' %}">
+          Витрина ↗
+        </a>
+
+        {% if user.is_authenticated %}
+          <span class="topbar__user">{{ user.username }}</span>
+
+          <form method="post" action="{% url 'showcase:dashboard_logout' %}">
+            {% csrf_token %}
+            <button class="btn btn--ghost btn--sm" type="submit">Выйти</button>
+          </form>
+        {% endif %}
+      </nav>
+    </header>
+
+    {% if messages %}
+      <div class="notices">
+        {% for message in messages %}
+          <div class="notice notice--{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

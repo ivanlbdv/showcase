@@ -1,0 +1,219 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Свод · управление витриной{% endblock %}
+
+{% block content %}
+  <section class="stats" aria-label="Статистика витрины">
+    <div class="stat">
+      <span class="stat__value">{{ stats.total }}</span>
+      <span class="stat__label">всего</span>
+    </div>
+    <div class="stat">
+      <span class="stat__value">{{ showcase_count }}</span>
+      <span class="stat__label">на витрине</span>
+    </div>
+    <div class="stat">
+      <span class="stat__value">{{ stats.priority }}</span>
+      <span class="stat__label">приоритетных</span>
+    </div>
+    <div class="stat">
+      <span class="stat__value">{{ stats.hidden }}</span>
+      <span class="stat__label">скрытых</span>
+    </div>
+  </section>
+
+  <div class="controls">
+    <nav class="filters" aria-label="Фильтрация офферов">
+      <a
+        class="filter{% if filter == 'all' %} is-active{% endif %}"
+        href="?filter=all"
+        {% if filter == 'all' %}aria-current="page"{% endif %}
+      >
+        Все
+      </a>
+
+      <a
+        class="filter{% if filter == 'active' %} is-active{% endif %}"
+        href="?filter=active"
+        {% if filter == 'active' %}aria-current="page"{% endif %}
+      >
+        На витрине
+      </a>
+
+      <a
+        class="filter{% if filter == 'priority' %} is-active{% endif %}"
+        href="?filter=priority"
+        {% if filter == 'priority' %}aria-current="page"{% endif %}
+      >
+        Приоритетные
+      </a>
+
+      <a
+        class="filter{% if filter == 'hidden' %} is-active{% endif %}"
+        href="?filter=hidden"
+        {% if filter == 'hidden' %}aria-current="page"{% endif %}
+      >
+        Скрытые
+      </a>
+    </nav>
+
+    <form class="sync-form" method="post" action="{% url 'showcase:dashboard_sync' %}">
+      {% csrf_token %}
+      <button class="btn btn--primary" type="submit" title="Синхронизировать офферы с API Leads.su">
+        Синхронизировать
+      </button>
+    </form>
+  </div>
+
+  <form
+    id="bulk-form"
+    method="post"
+    action="{% url 'showcase:dashboard_bulk' %}"
+  >
+    {% csrf_token %}
+
+    {% if products %}
+
+      <div class="bulk-bar">
+        <h2 class="bulk-bar__title">Действие с отмеченными</h2>
+
+        <div class="bulk-bar__actions">
+          <button
+            class="btn btn--ghost btn--sm"
+            type="submit"
+            name="action"
+            value="make_priority"
+          >
+            Отметить приоритетными
+          </button>
+
+          <button
+            class="btn btn--ghost btn--sm"
+            type="submit"
+            name="action"
+            value="hide"
+          >
+            Скрыть с витрины
+          </button>
+
+          <button
+            class="btn btn--ghost btn--sm"
+            type="submit"
+            name="action"
+            value="show"
+          >
+            Показать на витрине
+          </button>
+
+          <button
+            class="btn btn--danger btn--sm"
+            type="submit"
+            name="action"
+            value="delete"
+            onclick="return confirm('Удалить выбранные офферы без возможности восстановления?')"
+          >
+            Удалить
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if products %}
+      <div class="select-all-row">
+        <label class="check-all">
+          <input type="checkbox" id="select-all">
+          <span>Выбрать все</span>
+        </label>
+      </div>
+    {% endif %}
+
+    <section class="offers" aria-label="Список офферов">
+      {% for product in products %}
+        <article
+          class="offer{% if not product.is_active %} offer--dimmed{% endif %}"
+        >
+          <input
+            class="offer__check"
+            type="checkbox"
+            name="pks"
+            value="{{ product.pk }}"
+            data-state="{% if product.is_active %}active{% else %}hidden{% endif %}"
+            aria-label="Отметить оффер {{ product.provider_name }}"
+          >
+
+          <div class="offer__id">
+            {% if product.logo_url %}
+              <img class="offer__logo" src="{{ product.logo_url }}" alt="Логотип {{ product.provider_name }}" loading="lazy">
+            {% else %}
+              <span class="offer__logo offer__logo--empty">—</span>
+            {% endif %}
+
+            <h2 class="offer__title">{{ product.provider_name }}</h2>
+          </div>
+
+          <dl class="offer__data">
+            <div><dt>Сумма</dt><dd>{{ product.amount_text }}</dd></div>
+            <div><dt>Срок</dt><dd>{{ product.term_text }}</dd></div>
+            <div><dt>Ставка</dt><dd>{{ product.rate_text }}</dd></div>
+            <div><dt>ПСК</dt><dd>{{ product.psk_text|default:"—" }}</dd></div>
+          </dl>
+
+          <div class="offer__side">
+            <p class="offer__epc" title="EPC по данным Leads.su">
+              EPC {{ product.other_epc|floatformat:"-2" }}
+            </p>
+
+            <div class="offer__actions">
+              <button
+                class="btn btn--ghost btn--sm"
+                type="submit"
+                formaction="{% url 'showcase:dashboard_toggle_active' product.pk %}"
+              >
+                {% if product.is_active %}Скрыть{% else %}Показать{% endif %}
+              </button>
+
+              <button
+                class="btn btn--ghost btn--sm{% if product.is_priority_offer %} is-toggled{% endif %}"
+                type="submit"
+                formaction="{% url 'showcase:dashboard_toggle_priority' product.pk %}"
+              >
+                {% if product.is_priority_offer %}Снять приоритет{% else %}Приоритет{% endif %}
+              </button>
+
+              <a class="btn btn--ghost btn--sm" href="{% url 'showcase:dashboard_edit' product.pk %}">
+                Изменить
+              </a>
+
+              <button
+                class="btn btn--danger btn--sm"
+                type="submit"
+                formaction="{% url 'showcase:dashboard_delete' product.pk %}"
+                onclick="return confirm('Удалить оффер «{{ product.provider_name }}» без возможности восстановления?')"
+              >
+                Удалить
+              </button>
+
+              {% if product.product_url %}
+                <a class="btn btn--ghost btn--sm" href="{{ product.product_url }}" target="_blank" rel="noopener" title="{{ product.product_url }}">
+                  Открыть ↗
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% empty %}
+        <p class="offers__empty">
+          {% if filter == 'priority' %}
+            Приоритетных офферов пока нет.
+          {% elif filter == 'hidden' %}
+            Скрытых офферов пока нет.
+          {% else %}
+            Офферов пока нет — нажмите «Синхронизировать».
+          {% endif %}
+        </p>
+      {% endfor %}
+    </section>
+  </form>
+  <script src="{% static 'showcase/js/dashboard.js' %}"></script>
+{% endblock %}

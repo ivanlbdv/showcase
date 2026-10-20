@@ -14,17 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
+
 from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('showcase.urls')),
 ]
 
-admin.site.site_header = "Свод · управление витриной"
-admin.site.site_title = "Свод · админка"
-admin.site.index_title = "Разделы управления"
+admin_prefix = os.environ.get('DJANGO_ADMIN_URL', '')
+
+if admin_prefix:
+    urlpatterns.append(
+        path(f'{admin_prefix}/', admin.site.urls),
+    )
+print(urlpatterns)
 
 handler400 = 'showcase.error_views.error_400'
 handler403 = 'showcase.error_views.error_403'

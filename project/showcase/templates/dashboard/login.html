@@ -1,0 +1,39 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Свод · вход{% endblock %}
+
+{% block content %}
+  <section class="auth" aria-labelledby="auth-title">
+    <h1 id="auth-title" class="auth__title">
+      Личный кабинет
+    </h1>
+
+    <p class="auth__note">
+      Управление витриной финансовых предложений.
+    </p>
+
+    {% if form.non_field_errors %}
+      {% for error in form.non_field_errors %}
+        <div class="notice notice--error">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form class="auth__form" method="post">
+      {% csrf_token %}
+
+      <label class="field">
+        <span class="field__label">Имя пользователя</span>
+        {{ form.username }}
+      </label>
+
+      <label class="field">
+        <span class="field__label">Пароль</span>
+        {{ form.password }}
+      </label>
+
+      <button class="btn btn--primary btn--wide" type="submit">
+        Войти
+      </button>
+    </form>
+  </section>
+{% endblock %}
