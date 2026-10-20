@@ -29,7 +29,7 @@ load_dotenv(BASE_DIR.parent / '.env')
 SECRET_KEY = 'django-insecure-s0=h^@4j6qpof3zn%=g6f99kplx(erdl43as5g(ip4_2=5&%28'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
@@ -93,9 +93,14 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME", ""),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
+        "CONN_MAX_AGE": 60,
     }
 }
 

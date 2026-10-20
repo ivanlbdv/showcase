@@ -129,7 +129,7 @@ button:focus-visible {
   gap: 8px;
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
-  padding: 11px 20px;
+  padding: 14px 14px;
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
