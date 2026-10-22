@@ -146,6 +146,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
+
 # Leads.su API
 LEADS_API_TOKEN = os.environ.get('LEADS_API_TOKEN', '')
 

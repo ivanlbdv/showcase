@@ -1,7 +1,7 @@
 import io
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.management import call_command
@@ -71,7 +71,7 @@ def dashboard(request):
                 "sort_order",
                 "-created_at",
                 "id",
-            )[:10]
+            )[:MAX_SHOWCASE_OFFERS]
         )
     elif filter_key == "priority":
         products = Product.objects.filter(
