@@ -17,7 +17,7 @@ from .views import MAX_SHOWCASE_OFFERS
 
 def staff_required(view):
     return user_passes_test(
-        lambda user: user.is_staff,
+        lambda user: user.is_authenticated and user.is_staff,
         login_url="showcase:dashboard_login",
     )(view)
 
@@ -200,6 +200,7 @@ def sync_offers(request):
 
 
 @staff_required
+@require_POST
 def product_delete(request, pk):
     """Удаление одного оффера. Только POST + подтверждение на клиенте."""
     product = get_object_or_404(Product, pk=pk)
