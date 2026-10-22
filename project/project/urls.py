@@ -29,7 +29,6 @@ if admin_prefix:
     urlpatterns.append(
         path(f'{admin_prefix}/', admin.site.urls),
     )
-print(urlpatterns)
 
 handler400 = 'showcase.error_views.error_400'
 handler403 = 'showcase.error_views.error_403'
