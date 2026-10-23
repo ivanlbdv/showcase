@@ -420,23 +420,36 @@ button:focus-visible {
 /* Нижнее примечание */
 
 .disclaimer {
-  display: flex;
-  justify-content: space-between;
-  gap: 28px;
+  display: block;
   border-top: 1px solid var(--line);
   padding: 24px 0 40px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
 .disclaimer p {
-  max-width: 710px;
+  max-width: 1240px;
+  margin-bottom: 12px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.disclaimer p:last-of-type {
+  margin-bottom: 0;
+}
+
+.disclaimer__warning {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .disclaimer__age {
-  flex: 0 0 auto;
+  display: inline-block;
+  margin-top: 4px;
   font-family: var(--font-mono);
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -519,9 +532,8 @@ button:focus-visible {
     display: block;
   }
 
-  .disclaimer__age {
-    display: block;
-    margin-top: 12px;
+  .disclaimer p {
+    text-align: justify;
   }
 }
 
