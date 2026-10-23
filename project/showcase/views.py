@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import Product
 
 # Максимум карточек на витрине независимо от размера базы.
-MAX_SHOWCASE_OFFERS = 10
+MAX_SHOWCASE_OFFERS = 12
 
 
 def product_showcase(request):
