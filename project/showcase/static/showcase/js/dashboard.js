@@ -9,9 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const bar = form.querySelector(".bulk-bar");
   const selectAll = document.querySelector("#select-all");
 
-  const hideButton = bar.querySelector('button[value="hide"]');
-  const showButton = bar.querySelector('button[value="show"]');
-
   const updateSelectAll = () => {
     if (!selectAll) {
       return;
@@ -26,29 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const updateBar = () => {
-    const selected = Array.from(checks).filter((check) => check.checked);
-
-    const anySelected = selected.length > 0;
-    const hasActive = selected.some(
-      (check) => check.dataset.state === "active",
-    );
-    const hasHidden = selected.some(
-      (check) => check.dataset.state === "hidden",
-    );
+    const anySelected = Array.from(checks).some((check) => check.checked);
 
     bar.classList.toggle("bulk-bar--disabled", !anySelected);
 
     bar.querySelectorAll("button").forEach((button) => {
       button.disabled = !anySelected;
     });
-
-    if (hideButton && anySelected) {
-      hideButton.disabled = !hasActive;
-    }
-
-    if (showButton && anySelected) {
-      showButton.disabled = !hasHidden;
-    }
 
     updateSelectAll();
   };

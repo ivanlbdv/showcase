@@ -233,23 +233,29 @@ def bulk_actions(request):
 
     queryset = Product.objects.filter(pk__in=ids)
 
-    if action == "make_priority":
-        updated = queryset.update(is_priority_offer=True)
+    if action == "toggle_visible":
+        updated = 0
+
+        for product in queryset:
+            product.is_active = not product.is_active
+            product.save(update_fields=["is_active"])
+            updated += 1
+
         messages.success(
             request,
-            f"Отмечены приоритетными: {updated}.",
+            f"Переключена видимость у {updated} офферов.",
         )
-    elif action == "hide":
-        updated = queryset.filter(is_active=True).update(is_active=False)
+    elif action == "toggle_priority":
+        updated = 0
+
+        for product in queryset:
+            product.is_priority_offer = not product.is_priority_offer
+            product.save(update_fields=["is_priority_offer"])
+            updated += 1
+
         messages.success(
             request,
-            f"Скрыто с витрины: {updated}.",
-        )
-    elif action == "show":
-        updated = queryset.filter(is_active=False).update(is_active=True)
-        messages.success(
-            request,
-            f"Показано на витрине: {updated}.",
+            f"Переключен приоритет у {updated} офферов.",
         )
     elif action == "delete":
         deleted, _ = queryset.delete()

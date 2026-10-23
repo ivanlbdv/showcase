@@ -1,7 +1,7 @@
 {% extends "dashboard/base.html" %}
 {% load static %}
 
-{% block title %}Свод · управление витриной{% endblock %}
+{% block title %}ФинПарус · управление витриной{% endblock %}
 
 {% block content %}
   <section class="stats" aria-label="Статистика витрины">
@@ -83,27 +83,18 @@
             class="btn btn--ghost btn--sm"
             type="submit"
             name="action"
-            value="make_priority"
+            value="toggle_visible"
           >
-            Отметить приоритетными
+            Переключить видимость на витрине
           </button>
 
           <button
             class="btn btn--ghost btn--sm"
             type="submit"
             name="action"
-            value="hide"
+            value="toggle_priority"
           >
-            Скрыть с витрины
-          </button>
-
-          <button
-            class="btn btn--ghost btn--sm"
-            type="submit"
-            name="action"
-            value="show"
-          >
-            Показать на витрине
+            Переключить приоритет
           </button>
 
           <button
@@ -138,7 +129,7 @@
             type="checkbox"
             name="pks"
             value="{{ product.pk }}"
-            data-state="{% if product.is_active %}active{% else %}hidden{% endif %}"
+            {% comment %} data-state="{% if product.is_active %}active{% else %}hidden{% endif %}" {% endcomment %}
             aria-label="Отметить оффер {{ product.provider_name }}"
           >
 
