@@ -1,7 +1,6 @@
 services:
   web:
-    # image: ${APP_IMAGE}
-    build: .
+    image: ${APP_IMAGE}
     restart: unless-stopped
 
     env_file:
