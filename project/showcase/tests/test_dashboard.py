@@ -180,11 +180,11 @@ class DashboardTestCase(TestCase):
 
         self.assertEqual(response.status_code, 405)
 
-    def test_bulk_hide(self):
+    def test_bulk_toggle_visible_turns_active_off(self):
         response = self.client.post(
             reverse("showcase:dashboard_bulk"),
             {
-                "action": "hide",
+                "action": "toggle_visible",
                 "pks": [str(self.product.pk)],
             },
         )
@@ -194,14 +194,14 @@ class DashboardTestCase(TestCase):
         self.product.refresh_from_db()
         self.assertFalse(self.product.is_active)
 
-    def test_bulk_show(self):
+    def test_bulk_toggle_visible_turns_inactive_on(self):
         self.product.is_active = False
         self.product.save(update_fields=["is_active"])
 
         response = self.client.post(
             reverse("showcase:dashboard_bulk"),
             {
-                "action": "show",
+                "action": "toggle_visible",
                 "pks": [str(self.product.pk)],
             },
         )
@@ -211,11 +211,25 @@ class DashboardTestCase(TestCase):
         self.product.refresh_from_db()
         self.assertTrue(self.product.is_active)
 
-    def test_bulk_make_priority(self):
+    def test_bulk_toggle_visible_ignores_invalid_primary_keys(self):
         response = self.client.post(
             reverse("showcase:dashboard_bulk"),
             {
-                "action": "make_priority",
+                "action": "toggle_visible",
+                "pks": ["not-an-integer"],
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.product.refresh_from_db()
+        self.assertTrue(self.product.is_active)
+
+    def test_bulk_toggle_priority_turns_on(self):
+        response = self.client.post(
+            reverse("showcase:dashboard_bulk"),
+            {
+                "action": "toggle_priority",
                 "pks": [str(self.product.pk)],
             },
         )
@@ -224,6 +238,49 @@ class DashboardTestCase(TestCase):
 
         self.product.refresh_from_db()
         self.assertTrue(self.product.is_priority_offer)
+
+    def test_bulk_toggle_priority_turns_off(self):
+        self.product.is_priority_offer = True
+        self.product.save(update_fields=["is_priority_offer"])
+
+        response = self.client.post(
+            reverse("showcase:dashboard_bulk"),
+            {
+                "action": "toggle_priority",
+                "pks": [str(self.product.pk)],
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.product.refresh_from_db()
+        self.assertFalse(self.product.is_priority_offer)
+
+    def test_bulk_unknown_action_does_not_change_product(self):
+        response = self.client.post(
+            reverse("showcase:dashboard_bulk"),
+            {
+                "action": "nonsense",
+                "pks": [str(self.product.pk)],
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        self.product.refresh_from_db()
+        self.assertTrue(self.product.is_active)
+        self.assertFalse(self.product.is_priority_offer)
+
+    def test_bulk_without_pks_shows_warning(self):
+        response = self.client.post(
+            reverse("showcase:dashboard_bulk"),
+            {"action": "toggle_visible"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(
+            Product.objects.filter(is_active=False).exists()
+        )
 
     def test_bulk_delete(self):
         response = self.client.post(
