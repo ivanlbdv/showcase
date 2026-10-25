@@ -1,0 +1,54 @@
+services:
+  web:
+    # image: ${APP_IMAGE}
+    build: .
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    volumes:
+      - static_data:/app/staticfiles
+
+  db:
+    image: postgres:18
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER} -d ${DB_NAME}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx-static:
+    image: nginx:alpine
+    restart: unless-stopped
+
+    volumes:
+      - static_data:/usr/share/nginx/html/static:ro
+
+    ports:
+      - "127.0.0.1:8080:80"
+
+volumes:
+  postgres_data:
+  static_data:

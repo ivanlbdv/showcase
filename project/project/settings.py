@@ -146,10 +146,35 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_SSL_REDIRECT = False
-SECURE_HSTS_SECONDS = 0
+
+IS_PRODUCTION = (
+    os.environ.get('DJANGO_ENV', 'development') == 'production'
+)
+
+SESSION_COOKIE_SECURE = IS_PRODUCTION
+CSRF_COOKIE_SECURE = IS_PRODUCTION
+SECURE_SSL_REDIRECT = IS_PRODUCTION
+
+SECURE_HSTS_SECONDS = (
+    int(os.environ.get('DJANGO_HSTS_SECONDS', '0'))
+    if IS_PRODUCTION
+    else 0
+)
+
+if IS_PRODUCTION:
+    SECURE_PROXY_SSL_HEADER = (
+        'HTTP_X_FORWARDED_PROTO',
+        'https',
+    )
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        '',
+    ).split(',')
+    if origin.strip()
+]
 
 # Leads.su API
 LEADS_API_TOKEN = os.environ.get('LEADS_API_TOKEN', '')
