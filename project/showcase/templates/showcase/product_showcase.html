@@ -181,24 +181,24 @@
     </section>
 
     <footer class="disclaimer">
-      {% if products %}
+      {% if legal_items %}
         <details class="footer-legal">
           <summary class="footer-legal__summary">
-            Юридическая информация представленных о МФО
+            Юридическая информация о МФО
             <span class="footer-legal__sign" aria-hidden="true"></span>
           </summary>
+          <br>
           <div class="footer-legal__list">
-            {% for product in products %}
-              {% if product.legal_info %}
-                <section class="footer-legal__item">
-                  <h3 class="footer-legal__name">
-                    {{ product.provider_name }}
-                  </h3>
-                  <p class="footer-legal__lines">
-                    {{ product.legal_info|linebreaksbr }}
-                  </p>
-                </section>
-              {% endif %}
+            {% for provider_name, legal_info in legal_items %}
+              <section class="footer-legal__item">
+                <h3 class="footer-legal__name">
+                  {{ provider_name }}
+                </h3>
+                <p class="footer-legal__lines">
+                  {{ legal_info|linebreaksbr }}
+                </p>
+                <br>
+              </section>
             {% endfor %}
           </div>
         </details>

@@ -23,6 +23,19 @@ def product_showcase(request):
         )[:MAX_SHOWCASE_OFFERS]
     )
 
+    # Реквизиты для футера: одна МФО — один блок, даже если
+    # на витрине несколько её офферов. Первый попавшийся
+    # непустой legal_info побеждает (у всех карточек одной
+    # МФО он одинаковый — берётся из одной группы «Лицензии»).
+    legal_items: dict[str, str] = {}
+
+    for product in products:
+        if product.legal_info:
+            legal_items.setdefault(
+                product.provider_name,
+                product.legal_info,
+            )
+
     # В статусе учитываются вообще все карточки из базы:
     # активные и отключенные.
     last_product_created_at = Product.objects.aggregate(
@@ -31,6 +44,7 @@ def product_showcase(request):
 
     context = {
         "products": products,
+        "legal_items": list(legal_items.items()),
         "last_product_date": None,
         "is_updated_today": False,
     }
