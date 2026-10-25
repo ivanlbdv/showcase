@@ -549,3 +549,81 @@ button:focus-visible {
     animation: none !important;
   }
 }
+
+/* Юридическая информация в футере */
+
+.footer-legal {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.footer-legal__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Убираем системный треугольник раскрытия */
+.footer-legal__summary::-webkit-details-marker {
+  display: none;
+}
+
+.footer-legal__sign {
+  position: relative;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+}
+
+.footer-legal__sign::before,
+.footer-legal__sign::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--muted);
+  transform: translate(-50%, -50%);
+}
+
+.footer-legal__sign::before {
+  width: 10px;
+  height: 1.5px;
+}
+
+.footer-legal__sign::after {
+  width: 1.5px;
+  height: 10px;
+}
+
+/* При раскрытии вертикальная палочка «плюса» гаснет — получается «минус» */
+.footer-legal[open] .footer-legal__sign::after {
+  display: none;
+}
+
+.footer-legal__list {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.footer-legal__name {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.footer-legal__lines {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}

@@ -7,6 +7,7 @@ from showcase.integrations.leads_su import (DEFAULT_PSK_TEXT,
                                             DEFAULT_RATE_TEXT, LeadsSuAPIError,
                                             LeadsSuClient,
                                             OfferValidationError,
+                                            _extract_psk,
                                             _extract_terms_from_text,
                                             _parse_other_epc,
                                             _select_tracking_url, _strip_html,
@@ -525,6 +526,14 @@ class OfferNormalizationTests(SimpleTestCase):
             DEFAULT_PSK_TEXT,
         )
 
+    def test_psk_window_does_not_cross_lines(self):
+        result = _extract_psk(
+            "ПСК от 255,5% до 292% годовых\n"
+            "Одобрение за 1 минуту"
+        )
+
+        self.assertEqual(result, "255,50 – 292,00%")
+
     def test_invalid_logo_does_not_reject_offer(self):
         offer = make_offer(
             logo="http://example.com/logo.png",
@@ -654,3 +663,38 @@ class OfferHelperTests(SimpleTestCase):
             result,
             "https://example.com/default",
         )
+
+    def test_legal_info_is_built_from_licenses_group(self):
+        offer = make_offer()
+
+        offer["extendedFields"]["Лицензии"] = {
+            "Наименование ЮЛ": "ООО МКК «Алистар»",
+            "Юридический адрес": "107023, Г.МОСКВА, ПЕР. СЕМЁНОВСКИЙ, Д. 19",
+            "Телефон": "+7 (991) 760-62-82",
+            "Email": "info@ali-star.ru",
+            "ОГРН": "1247700596659",
+            "ИНН": "9704249544",
+            "Лицензия (N c датой)": "2403045010104 от 25.10.2024",
+        }
+
+        result = normalize_offer(offer, platform_id="123")
+
+        self.assertIn("ООО МКК «Алистар»", result.legal_info)
+        self.assertIn("ОГРН: 1247700596659", result.legal_info)
+        self.assertIn("Лицензия (N c датой): 2403045010104", result.legal_info)
+        # Контакты в витринный блок не попадают
+        self.assertNotIn("Телефон", result.legal_info)
+        self.assertNotIn("Email", result.legal_info)
+
+    def test_legal_info_is_empty_without_licenses_group(self):
+        result = normalize_offer(make_offer(), platform_id="123")
+
+        self.assertEqual(result.legal_info, "")
+
+    def test_weeks_convert_separately_for_low_and_high(self):
+        result = _extract_terms_from_text(
+            "Срок от 7 дней до 24 недель."
+        )
+
+        self.assertEqual(result["min_term_days"], 7)
+        self.assertEqual(result["max_term_days"], 168)

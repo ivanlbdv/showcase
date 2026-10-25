@@ -115,6 +115,7 @@ class Command(BaseCommand):
                             offer.external_modified_at
                         ),
                         "is_active": offer.is_active,
+                        "legal_info": offer.legal_info,
                     },
                 )
 

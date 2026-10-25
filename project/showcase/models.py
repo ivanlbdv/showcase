@@ -125,6 +125,16 @@ class Product(models.Model):
         help_text="Доход на 100 кликов по данным Leads.su. Используется для сортировки витрины.",
     )
 
+    legal_info = models.TextField(
+        "Юридическая информация",
+        blank=True,
+        default="",
+        help_text=(
+            "Реквизиты МФО: наименование, адрес, ОГРН, ИНН, лицензия. "
+            "Заполняется при синхронизации из группы «Лицензии»"
+        ),
+    )
+
     sort_order = models.PositiveIntegerField(
         verbose_name="Порядок показа",
         default=0,

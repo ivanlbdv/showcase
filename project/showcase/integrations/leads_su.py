@@ -38,6 +38,20 @@ DEFAULT_PSK_TEXT = "0,00 – 292,00%"
 # поэтому не является фиктивным значением.
 DEFAULT_RATE_TEXT = "от 0 до 0,8%"
 
+# Группа extendedFields с реквизитами МФО.
+_LICENSES_GROUP = "Лицензии"
+
+# Что попадает в юридический блок на витрине. Телефон и email
+# намеренно не включаем: это реквизиты для переговоров,
+# а не для пользовательского футера.
+_LEGAL_FIELD_ORDER = (
+    "Наименование ЮЛ",
+    "Юридический адрес",
+    "ОГРН",
+    "ИНН",
+    "Лицензия (N c датой)",
+)
+
 # Блочные теги превращаем в переносы строк, чтобы пункты
 # списков и абзацы не склеивались в один монолит — иначе
 # fallback-парсинг не сможет найти условия по границам строк.
@@ -72,6 +86,7 @@ class NormalizedOffer:
     logo_url: str
     external_modified_at: datetime | None
     is_active: bool
+    legal_info: str
 
 
 class LeadsSuClient:
@@ -468,6 +483,7 @@ def normalize_offer(
         logo_url=logo_url,
         external_modified_at=external_modified_at,
         is_active=True,
+        legal_info=_build_legal_info(extended_fields),
     )
 
 
@@ -683,7 +699,7 @@ def _extract_term_days(text: str) -> tuple[int | None, int | None]:
     ):
         low, high = int(m.group(1)), int(m.group(2))
         if "недел" in m.group(3).casefold():
-            low, high = low * 7, high * 7
+            high *= 7
         if 0 < low <= high <= MAX_TERM_DAYS:
             lows.append(low)
             highs.append(high)
@@ -821,7 +837,7 @@ def _extract_psk(text: str) -> str:
     if not match:
         return ""
 
-    segment = text[match.start():match.start() + 100]
+    segment = text[match.start():match.start() + 100].split("\n", 1)[0]
     values: list[Decimal] = []
 
     for raw in re.findall(r"(\d+(?:[.,]\d+)?)", segment):
@@ -843,6 +859,25 @@ def _extract_psk(text: str) -> str:
         return f"{_format_psk_value(low)} – {_format_psk_value(high)}%"
 
     return f"{_format_psk_value(high)}%"
+
+
+def _build_legal_info(
+    extended_fields: Any,
+) -> str:
+    """Собирает юридическую справку из группы «Лицензии»."""
+    if not isinstance(extended_fields, dict):
+        return ""
+
+    licenses = extended_fields.get(_LICENSES_GROUP) or {}
+
+    lines = []
+    for label in _LEGAL_FIELD_ORDER:
+        value = _clean_text(licenses.get(label))
+
+        if value and value != "---":
+            lines.append(f"{label}: {value}")
+
+    return "\n".join(lines)
 
 
 def _format_parsed_rate(rates: list[Decimal]) -> str:

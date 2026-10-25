@@ -181,6 +181,29 @@
     </section>
 
     <footer class="disclaimer">
+      {% if products %}
+        <details class="footer-legal">
+          <summary class="footer-legal__summary">
+            Юридическая информация представленных о МФО
+            <span class="footer-legal__sign" aria-hidden="true"></span>
+          </summary>
+          <div class="footer-legal__list">
+            {% for product in products %}
+              {% if product.legal_info %}
+                <section class="footer-legal__item">
+                  <h3 class="footer-legal__name">
+                    {{ product.provider_name }}
+                  </h3>
+                  <p class="footer-legal__lines">
+                    {{ product.legal_info|linebreaksbr }}
+                  </p>
+                </section>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </details>
+      {% endif %}
+      <br>
       <p class="disclaimer__warning">
         Оценивайте свои финансовые возможности и риски. Изучите все условия
         кредита (займа).
