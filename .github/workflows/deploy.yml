@@ -40,10 +40,8 @@ jobs:
           python manage.py test showcase \
             --settings=project.test_settings
 
-
   build:
     needs: test
-
     runs-on: ubuntu-latest
 
     outputs:
@@ -82,10 +80,8 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
 
-
   deploy:
     needs: build
-
     runs-on: ubuntu-latest
 
     environment:
@@ -93,6 +89,9 @@ jobs:
       url: https://finparus.ru
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -110,6 +109,14 @@ jobs:
             > ~/.ssh/known_hosts
 
           chmod 600 ~/.ssh/known_hosts
+
+      - name: Copy production compose file
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          scp compose.prod.yaml \
+            "${SERVER_USER}@${SERVER_HOST}:/opt/finparus/compose.prod.yaml"
 
       - name: Deploy
         env:
