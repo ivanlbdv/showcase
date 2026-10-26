@@ -554,7 +554,7 @@ button:focus-visible {
 
 .footer-legal {
   margin-top: 24px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
   padding-top: 16px;
 }
 
