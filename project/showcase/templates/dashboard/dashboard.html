@@ -25,37 +25,41 @@
 
   <div class="controls">
     <nav class="filters" aria-label="Фильтрация офферов">
-      <a
-        class="filter{% if filter == 'all' %} is-active{% endif %}"
-        href="?filter=all"
-        {% if filter == 'all' %}aria-current="page"{% endif %}
+      <button
+        class="filter is-active"
+        type="button"
+        data-filter="all"
+        aria-pressed="true"
       >
         Все
-      </a>
+      </button>
 
-      <a
-        class="filter{% if filter == 'active' %} is-active{% endif %}"
-        href="?filter=active"
-        {% if filter == 'active' %}aria-current="page"{% endif %}
+      <button
+        class="filter"
+        type="button"
+        data-filter="active"
+        aria-pressed="false"
       >
         На витрине
-      </a>
+      </button>
 
-      <a
-        class="filter{% if filter == 'priority' %} is-active{% endif %}"
-        href="?filter=priority"
-        {% if filter == 'priority' %}aria-current="page"{% endif %}
+      <button
+        class="filter"
+        type="button"
+        data-filter="priority"
+        aria-pressed="false"
       >
         Приоритетные
-      </a>
+      </button>
 
-      <a
-        class="filter{% if filter == 'hidden' %} is-active{% endif %}"
-        href="?filter=hidden"
-        {% if filter == 'hidden' %}aria-current="page"{% endif %}
+      <button
+        class="filter"
+        type="button"
+        data-filter="hidden"
+        aria-pressed="false"
       >
         Скрытые
-      </a>
+      </button>
     </nav>
 
     <form class="sync-form" method="post" action="{% url 'showcase:dashboard_sync' %}">
@@ -123,6 +127,9 @@
       {% for product in products %}
         <article
           class="offer{% if not product.is_active %} offer--dimmed{% endif %}"
+          data-active="{% if product.is_active %}true{% else %}false{% endif %}"
+          data-priority="{% if product.is_priority_offer %}true{% else %}false{% endif %}"
+          data-showcase="{% if product.pk in showcase_product_ids %}true{% else %}false{% endif %}"
         >
           <input
             class="offer__check"
@@ -195,16 +202,13 @@
         </article>
       {% empty %}
         <p class="offers__empty">
-          {% if filter == 'priority' %}
-            Приоритетных офферов пока нет.
-          {% elif filter == 'hidden' %}
-            Скрытых офферов пока нет.
-          {% else %}
-            Офферов пока нет — нажмите «Синхронизировать».
-          {% endif %}
+          Офферов пока нет — нажмите «Синхронизировать».
         </p>
       {% endfor %}
     </section>
+    <p class="offers__empty" id="filter-empty" hidden>
+      Нет офферов, соответствующих выбранному фильтру.
+    </p>
   </form>
   <script src="{% static 'showcase/js/dashboard.js' %}"></script>
 {% endblock %}

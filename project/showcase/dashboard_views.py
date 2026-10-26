@@ -53,50 +53,17 @@ def logout_view(request):
 
 @staff_required
 def dashboard(request):
-    # Фильтр из адресной строки: all | active | priority | hidden.
-    filter_key = request.GET.get("filter", "all")
-
-    if filter_key not in {"all", "active", "priority", "hidden"}:
-        filter_key = "all"
-
-    if filter_key == "active":
-        # «На витрине» — ровно та же выборка, что на публичной
-        # витрине: активные, приоритетные сверху, по EPC и порядку,
-        # максимум 10 карточек.
-        products = list(
-            Product.objects.filter(is_active=True)
-            .order_by(
-                "-is_priority_offer",
-                "-other_epc",
-                "sort_order",
-                "-created_at",
-                "id",
-            )[:MAX_SHOWCASE_OFFERS]
-        )
-    elif filter_key == "priority":
-        products = Product.objects.filter(
-            is_priority_offer=True,
-        ).order_by(
-            "-is_active",
-            "sort_order",
-            "-updated_at",
-        )
-    elif filter_key == "hidden":
-        products = Product.objects.filter(
-            is_active=False,
-        ).order_by(
-            "-is_priority_offer",
-            "sort_order",
-            "-updated_at",
-        )
-    else:
-        # «Все» — реально всё из базы, включая скрытые.
-        products = Product.objects.order_by(
+    # Кабинет всегда загружает полный список офферов один раз.
+    # Переключение фильтров после загрузки выполняется в браузере
+    # через dashboard.js без дополнительных запросов к Django.
+    products = list(
+        Product.objects.order_by(
             "-is_priority_offer",
             "-is_active",
             "sort_order",
             "-updated_at",
         )
+    )
 
     stats = Product.objects.aggregate(
         total=Count("id"),
@@ -105,16 +72,28 @@ def dashboard(request):
         hidden=Count("id", filter=Q(is_active=False)),
     )
 
-    # На витрине физически не больше MAX_SHOWCASE_OFFERS карточек
-    # (см. константу в showcase/views.py), поэтому счётчик кабинета
-    # не должен показывать больше.
-    showcase_count = min(stats["active"], MAX_SHOWCASE_OFFERS)
+    # Определяем те же офферы, которые реально попадают
+    # на публичную витрину. Это нужно для JS-фильтра
+    # «На витрине».
+    showcase_product_ids = set(
+        Product.objects.filter(is_active=True)
+        .order_by(
+            "-is_priority_offer",
+            "-other_epc",
+            "sort_order",
+            "-created_at",
+            "id",
+        )
+        .values_list("id", flat=True)[:MAX_SHOWCASE_OFFERS]
+    )
+
+    showcase_count = len(showcase_product_ids)
 
     context = {
         "products": products,
         "stats": stats,
         "showcase_count": showcase_count,
-        "filter": filter_key,
+        "showcase_product_ids": showcase_product_ids,
     }
 
     return render(

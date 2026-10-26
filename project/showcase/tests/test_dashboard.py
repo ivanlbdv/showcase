@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 from showcase.models import Product
+from showcase.views import MAX_SHOWCASE_OFFERS
 
 
 class DashboardTestCase(TestCase):
@@ -71,14 +72,123 @@ class DashboardTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.product.provider_name)
 
-    def test_invalid_filter_falls_back_to_all(self):
+    def test_dashboard_always_contains_all_products(self):
+        hidden = Product.objects.create(
+            provider_name="Hidden MFO",
+            title="Hidden Product",
+            category=Product.Category.SHORT_TERM,
+            amount_text="до 20 000 ₽",
+            term_text="до 20 дней",
+            rate_text="0,8%",
+            product_url="https://example.com/hidden",
+            is_active=False,
+        )
+
+        priority = Product.objects.create(
+            provider_name="Priority MFO",
+            title="Priority Product",
+            category=Product.Category.SHORT_TERM,
+            amount_text="до 40 000 ₽",
+            term_text="до 30 дней",
+            rate_text="0,8%",
+            product_url="https://example.com/priority",
+            is_active=True,
+            is_priority_offer=True,
+        )
+
         response = self.client.get(
             reverse("showcase:dashboard"),
-            {"filter": "invalid-filter"},
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["filter"], "all")
+
+        products = list(response.context["products"])
+
+        self.assertIn(self.product, products)
+        self.assertIn(hidden, products)
+        self.assertIn(priority, products)
+
+    def test_dashboard_renders_filter_state_as_data_attributes(self):
+        self.product.is_priority_offer = True
+        self.product.save(
+            update_fields=["is_priority_offer"],
+        )
+
+        response = self.client.get(
+            reverse("showcase:dashboard"),
+        )
+
+        self.assertContains(
+            response,
+            'data-active="true"',
+            html=False,
+        )
+        self.assertContains(
+            response,
+            'data-priority="true"',
+            html=False,
+        )
+        self.assertContains(
+            response,
+            'data-showcase="true"',
+            html=False,
+        )
+
+    def test_hidden_product_is_available_for_client_filter(self):
+        hidden = Product.objects.create(
+            provider_name="Hidden MFO",
+            title="Hidden Product",
+            category=Product.Category.SHORT_TERM,
+            amount_text="до 20 000 ₽",
+            term_text="до 20 дней",
+            rate_text="0,8%",
+            product_url="https://example.com/hidden",
+            is_active=False,
+        )
+
+        response = self.client.get(
+            reverse("showcase:dashboard"),
+        )
+
+        self.assertContains(
+            response,
+            hidden.provider_name,
+        )
+
+        self.assertContains(
+            response,
+            'data-active="false"',
+            html=False,
+        )
+
+    def test_showcase_ids_respect_showcase_limit(self):
+        for index in range(20):
+            Product.objects.create(
+                provider_name=f"MFO {index}",
+                title=f"Product {index}",
+                category=Product.Category.SHORT_TERM,
+                amount_text="до 30 000 ₽",
+                term_text="до 30 дней",
+                rate_text="0,8%",
+                product_url=(
+                    f"https://example.com/product/{index}"
+                ),
+                is_active=True,
+                other_epc=index,
+            )
+
+        response = self.client.get(
+            reverse("showcase:dashboard"),
+        )
+
+        showcase_product_ids = response.context[
+            "showcase_product_ids"
+        ]
+
+        self.assertEqual(
+            len(showcase_product_ids),
+            MAX_SHOWCASE_OFFERS,
+        )
 
     def test_delete_rejects_get(self):
         response = self.client.get(
