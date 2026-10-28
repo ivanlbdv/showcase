@@ -184,3 +184,10 @@ LEADS_PLATFORM_ID = os.environ.get(
     'LEADS_PLATFORM_ID',
     '1315391',
 )
+
+SHOWCASE_SYNC_INTERVAL_SECONDS = int(
+    os.environ.get(
+        'SHOWCASE_SYNC_INTERVAL_SECONDS',
+        '600',
+    )
+)
