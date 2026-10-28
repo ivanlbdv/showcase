@@ -87,6 +87,49 @@ Product.objects.update_or_create(...)
 публичная витрина
 ```
 
+### Автоматическая синхронизация
+
+В production витрина автоматически синхронизируется с Leads.su.
+
+Интервал задается в переменной окружения:
+
+```dotenv
+SHOWCASE_SYNC_INTERVAL_SECONDS=600
+```
+
+Значение указывается в секундах.
+
+Например:
+
+```text
+300 = 5 минут
+900 = 15 минут
+1800 = 30 минут
+3600 = 1 час
+```
+
+Если переменная не указана, используется интервал:
+
+```text
+600 секунд
+```
+
+Автоматическая синхронизация выполняется отдельным Docker Compose сервисом:
+
+```text
+sync
+```
+
+Он запускает management command:
+
+```bash
+python manage.py run_offer_sync_scheduler
+```
+
+При запуске scheduler сразу выполняет синхронизацию, после чего ожидает заданный интервал перед следующим запуском.
+
+Ошибка отдельной синхронизации не останавливает scheduler. Следующая попытка будет выполнена через установленный интервал.
+
 ### Основные правила синхронизации
 
 Импортированные предложения идентифицируются комбинацией:
@@ -693,10 +736,11 @@ Production-конфигурация находится в:
 compose.prod.yaml
 ```
 
-Она содержит три сервиса:
+Она содержит четыре сервиса:
 
 ```text
 web
+sync
 db
 nginx-static
 ```
@@ -712,6 +756,24 @@ APP_IMAGE=...
 ```
 
 Контейнер читает production environment из `.env`.
+
+### `sync`
+
+Отдельный процесс автоматической синхронизации витрины с Leads.su.
+
+Scheduler запускает:
+
+```bash
+python manage.py sync_leads_offers
+```
+
+с интервалом, заданным через:
+
+```dotenv
+SHOWCASE_SYNC_INTERVAL_SECONDS=600
+```
+
+Scheduler использует тот же Docker image и `.env`, что и основной Django-сервис.
 
 ### `db`
 
@@ -880,6 +942,8 @@ DB_PORT=5432
 
 LEADS_API_TOKEN=replace-with-real-token
 LEADS_PLATFORM_ID=1315391
+
+SHOWCASE_SYNC_INTERVAL_SECONDS=600
 ```
 
 Для Docker Compose `DB_HOST` должен соответствовать имени database service:
