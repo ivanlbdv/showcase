@@ -64,3 +64,10 @@ def product_showcase(request):
         "showcase/product_showcase.html",
         context,
     )
+
+
+def privacy_policy(request):
+    return render(
+        request,
+        "showcase/privacy.html",
+    )

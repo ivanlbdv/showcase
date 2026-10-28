@@ -1,13 +1,13 @@
 from django.urls import path
 
 from . import dashboard_views
-from .views import product_showcase
+from .views import privacy_policy, product_showcase
 
 app_name = 'showcase'
 
 urlpatterns = [
     path('', product_showcase, name='product_showcase'),
-
+    path('privacy/', privacy_policy, name='privacy_policy'),
     path('lk/', dashboard_views.dashboard, name='dashboard'),
     path('lk/login/', dashboard_views.login_view, name='dashboard_login'),
     path('lk/logout/', dashboard_views.logout_view, name='dashboard_logout'),

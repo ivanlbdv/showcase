@@ -114,3 +114,42 @@ class ProductShowcaseTests(TestCase):
 
         self.assertEqual(products[0], high_epc)
         self.assertEqual(products[1], low_epc)
+
+
+class PrivacyPolicyTests(TestCase):
+    def test_privacy_policy_is_public(self):
+        response = self.client.get(
+            reverse("showcase:privacy_policy"),
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_privacy_policy_uses_expected_template(self):
+        response = self.client.get(
+            reverse("showcase:privacy_policy"),
+        )
+
+        self.assertTemplateUsed(
+            response,
+            "showcase/privacy.html",
+        )
+
+    def test_privacy_policy_contains_title(self):
+        response = self.client.get(
+            reverse("showcase:privacy_policy"),
+        )
+
+        self.assertContains(
+            response,
+            "Политика в отношении обработки персональных данных",
+        )
+
+    def test_showcase_contains_privacy_policy_link(self):
+        response = self.client.get(
+            reverse("showcase:product_showcase"),
+        )
+
+        self.assertContains(
+            response,
+            reverse("showcase:privacy_policy"),
+        )
