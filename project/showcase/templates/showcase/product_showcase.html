@@ -28,15 +28,7 @@
       </a>
 
       <p class="status">
-        {% if last_product_date %}
-          {% if is_updated_today %}
-            Витрина офферов · обновлено сегодня
-          {% else %}
-            Витрина офферов · обновлено {{ last_product_date|date:"d.m.Y" }}
-          {% endif %}
-        {% else %}
-          Витрина офферов
-        {% endif %}
+        Витрина офферов
       </p>
     </header>
 
