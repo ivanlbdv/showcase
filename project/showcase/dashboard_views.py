@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import DashboardProductForm
-from .models import Product
+from .models import Product, SyncStatus
 from .views import MAX_SHOWCASE_OFFERS
 
 
@@ -89,11 +89,14 @@ def dashboard(request):
 
     showcase_count = len(showcase_product_ids)
 
+    sync_status = SyncStatus.objects.filter(pk=1).first()
+
     context = {
         "products": products,
         "stats": stats,
         "showcase_count": showcase_count,
         "showcase_product_ids": showcase_product_ids,
+        "sync_status": sync_status,
     }
 
     return render(

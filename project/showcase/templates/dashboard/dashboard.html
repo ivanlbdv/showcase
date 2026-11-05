@@ -9,7 +9,37 @@
       <p>Контролируйте публикацию предложений и обновляйте данные каталога.</p>
     </div>
   </header>
+  <div class="sync-status">
+    <div class="sync-status__item">
+      <span class="sync-status__label">
+        <span class="sync-status__dot"></span>
+        Ручная синхронизация
+      </span>
 
+      <span class="sync-status__value">
+        {% if sync_status and sync_status.last_manual_sync_at %}
+          {{ sync_status.last_manual_sync_at|date:"d.m.Y, H:i" }}
+        {% else %}
+          Ещё не выполнялась
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="sync-status__item">
+      <span class="sync-status__label">
+        <span class="sync-status__dot sync-status__dot--auto"></span>
+        Автоматическая синхронизация
+      </span>
+
+      <span class="sync-status__value">
+        {% if sync_status and sync_status.last_scheduler_sync_at %}
+          {{ sync_status.last_scheduler_sync_at|date:"d.m.Y, H:i" }}
+        {% else %}
+          Ещё не выполнялась
+        {% endif %}
+      </span>
+    </div>
+  </div>
   <section class="stats" aria-label="Статистика витрины">
     <div class="stat"><span class="stat__value">{{ stats.total }}</span><span class="stat__label">Всего предложений</span></div>
     <div class="stat"><span class="stat__value">{{ showcase_count }}</span><span class="stat__label">На витрине</span></div>

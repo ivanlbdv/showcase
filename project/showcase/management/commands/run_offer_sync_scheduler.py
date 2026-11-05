@@ -39,6 +39,7 @@ class Command(BaseCommand):
         try:
             call_command(
                 "sync_leads_offers",
+                source="scheduler",
                 stdout=self.stdout,
                 stderr=self.stderr,
             )

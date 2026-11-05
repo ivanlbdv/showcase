@@ -166,3 +166,24 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.provider_name} — {self.title}"
+
+
+class SyncStatus(models.Model):
+    last_manual_sync_at = models.DateTimeField(
+        verbose_name="Последняя ручная синхронизация",
+        null=True,
+        blank=True,
+    )
+
+    last_scheduler_sync_at = models.DateTimeField(
+        verbose_name="Последняя автоматическая синхронизация",
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = "Статус синхронизации"
+        verbose_name_plural = "Статус синхронизации"
+
+    def __str__(self):
+        return "Статус синхронизации Leads.su"

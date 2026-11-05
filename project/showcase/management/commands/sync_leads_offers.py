@@ -3,10 +3,11 @@ import logging
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils import timezone
 from showcase.integrations.leads_su import (LeadsSuAPIError, LeadsSuClient,
                                             OfferValidationError,
                                             normalize_offer)
-from showcase.models import Product
+from showcase.models import Product, SyncStatus
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +27,16 @@ class Command(BaseCommand):
                 "но не менять базу данных."
             ),
         )
+        parser.add_argument(
+            "--source",
+            choices=("manual", "scheduler"),
+            default="manual",
+            help="Источник запуска синхронизации.",
+        )
 
     def handle(self, *args, **options):
         dry_run = options["dry_run"]
+        sync_source = options["source"]
 
         client = LeadsSuClient(
             api_token=settings.LEADS_API_TOKEN,
@@ -139,6 +147,14 @@ class Command(BaseCommand):
             ).update(
                 is_active=False,
             )
+        sync_field = f"last_{sync_source}_sync_at"
+
+        SyncStatus.objects.update_or_create(
+            pk=1,
+            defaults={
+                sync_field: timezone.now(),
+            },
+        )
 
         self.stdout.write(
             self.style.SUCCESS(
