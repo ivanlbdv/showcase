@@ -3,199 +3,122 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-  <meta
-    name="description"
-    content="ФинПарус — витрина предложений по займам от микрофинансовых организаций. Сравнение условий и оформление напрямую."
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ФинПарус — витрина предложений по займам от микрофинансовых организаций. Сравнение условий и оформление напрямую.">
+  <meta name="theme-color" content="#ffffff">
   <title>ФинПарус — подбор займов от микрофинансовых организаций</title>
-
-  <link
-    rel="stylesheet"
-    href="{% static 'showcase/css/showcase.css' %}"
-  >
+  <link rel="stylesheet" href="{% static 'showcase/css/showcase.css' %}">
 </head>
-
 <body>
-  <main class="container">
+  <main class="container showcase-container">
     <header class="topbar">
       <a class="brand" href="{% url 'showcase:product_showcase' %}">
         ФинПарус
       </a>
 
-      <p class="status">
-        Витрина офферов
-      </p>
+      <a
+        class="btn btn--ghost btn--sm"
+        href="{% url 'showcase:dashboard_login' %}"
+      >
+        Войти в личный кабинет
+      </a>
     </header>
 
-    <section class="hero" aria-labelledby="showcase-title">
-      <h1 id="showcase-title" class="hero__title">
-        ФинПарус.
-        <br>
-        <strong>
-          Подбор займов
-          <br>
-          под твой курс.
-        </strong>
-      </h1>
-
-      <p class="hero__note">
-        Выберите подходящее предложение от микрофинансовых организаций.
-        Сравните параметры и переходите к оформлению напрямую.
-      </p>
-    </section>
-
-    <nav class="filters" aria-label="Фильтрация предложений">
-      <button
-        class="filter is-active"
-        type="button"
-        data-filter="all"
-        aria-pressed="true"
-      >
-        Все предложения
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="new"
-        aria-pressed="false"
-      >
-        Новым клиентам
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="short_term"
-        aria-pressed="false"
-      >
-        До 30 дней
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="long_term"
-        aria-pressed="false"
-      >
-        Длительный срок
-      </button>
-    </nav>
-
-    <section
-      class="products"
-      aria-label="Список финансовых предложений"
-    >
-      {% for product in products %}
-        <article
-          class="card{% if product.is_priority_offer %} card--priority{% endif %}"
-          data-categories="{{ product.category }}{% if product.is_for_new_clients %} new{% endif %}"
-        >
-          <div>
-            <div class="card__top">
-              <div>
-                {% if product.logo_url %}
-                  <img
-                    class="card__logo"
-                    src="{{ product.logo_url }}"
-                    alt="Логотип {{ product.provider_name }}"
-                    loading="lazy"
-                  >
-                {% endif %}
-
-                <h2 class="card__title">
-                  {{ product.title }}
-                </h2>
-              </div>
-
-              <span
-                class="card__number"
-                aria-label="Номер предложения {{ forloop.counter }}"
-              >
-                {{ forloop.counter|stringformat:"02d" }}
-              </span>
-            </div>
-
-            <div class="card__data">
-              <div class="metric">
-                <span class="metric__label">Сумма</span>
-                <strong class="metric__value">
-                  {{ product.amount_text }}
-                </strong>
-              </div>
-
-              <div class="metric">
-                <span class="metric__label">Срок</span>
-                <strong class="metric__value">
-                  {{ product.term_text }}
-                </strong>
-              </div>
-
-              <div class="metric">
-                <span class="metric__label">ПСК</span>
-                <strong class="metric__value">
-                  {{ product.psk_text }}
-                </strong>
-              </div>
-
-              <div class="metric">
-                <span class="metric__label">Ставка</span>
-                <strong class="metric__value">
-                  {{ product.rate_text }}
-                </strong>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="card__bottom">
-            <a
-              class="card__action"
-              href="{{ product.product_url }}"
-              target="_blank"
-              rel="nofollow sponsored noopener"
-              aria-label="Смотреть условия продукта: {{ product.title }}"
-            >
-              Смотреть условия
-            </a>
-          </div>
-        </article>
-      {% empty %}
-        <p class="products__empty">
-          Сейчас нет доступных предложений.
+    <section class="showcase-hero" aria-labelledby="showcase-title">
+      <div>
+        <p class="page-eyebrow">ФинПарус · Финансовые предложения</p>
+        <h1 id="showcase-title" class="hero__title">
+          Выбирайте<br><strong>свой маршрут.</strong>
+        </h1>
+      </div>
+      <div>
+        <p class="hero__note">
+          Выберите подходящее предложение от микрофинансовых организаций.
+          Сравните параметры и переходите к оформлению напрямую.
         </p>
-      {% endfor %}
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#offers">Смотреть предложения <span aria-hidden="true">↓</span></a>
+          <a class="btn btn--ghost" href="#about">О сервисе</a>
+        </div>
+      </div>
     </section>
 
-    <footer class="disclaimer">
+    <div class="hero__facts" aria-label="О сервисе">
+      <div class="hero-fact"><strong>Все варианты</strong><span>на одной витрине</span></div>
+      <div class="hero-fact"><strong>Понятные условия</strong><span>для сравнения</span></div>
+      <div class="hero-fact"><strong>Ваш выбор</strong><span>без лишних шагов</span></div>
+    </div>
+
+    <section id="offers" aria-labelledby="offers-title">
+      <div class="section-heading">
+        <div>
+          <p class="page-eyebrow">Подбор предложений</p>
+          <h2 id="offers-title">Найдите подходящие условия</h2>
+        </div>
+        <p>Параметры предложений носят информационный характер. Перед оформлением проверьте условия у кредитора.</p>
+      </div>
+
+      <nav class="filters" aria-label="Фильтрация предложений">
+        <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Все предложения</button>
+        <button class="filter" type="button" data-filter="new" aria-pressed="false">Новым клиентам</button>
+        <button class="filter" type="button" data-filter="short_term" aria-pressed="false">До 30 дней</button>
+        <button class="filter" type="button" data-filter="long_term" aria-pressed="false">Длительный срок</button>
+      </nav>
+
+      <div class="products" aria-label="Список финансовых предложений">
+        {% for product in products %}
+          <article class="card{% if product.is_priority_offer %} card--priority{% endif %}"
+                   data-categories="{{ product.category }}{% if product.is_for_new_clients %} new{% endif %}">
+            <div>
+              <div class="card__top">
+                <div>
+                  {% if product.logo_url %}
+                    <img class="card__logo" src="{{ product.logo_url }}" alt="Логотип {{ product.provider_name }}" loading="lazy">
+                  {% endif %}
+                  <h3 class="card__title">{{ product.title }}</h3>
+                </div>
+              </div>
+              {% if product.is_priority_offer %}
+                <span class="card__priority-label">Рекомендуем</span>
+              {% endif %}
+
+              <div class="card__data">
+                <div class="metric"><span class="metric__label">Сумма</span><strong class="metric__value">{{ product.amount_text }}</strong></div>
+                <div class="metric"><span class="metric__label">Срок</span><strong class="metric__value">{{ product.term_text }}</strong></div>
+                <div class="metric"><span class="metric__label">ПСК</span><strong class="metric__value">{{ product.psk_text }}</strong></div>
+                <div class="metric"><span class="metric__label">Ставка</span><strong class="metric__value">{{ product.rate_text }}</strong></div>
+              </div>
+            </div>
+            <div class="card__bottom">
+              <a class="card__action" href="{{ product.product_url }}" target="_blank" rel="nofollow sponsored noopener"
+                 aria-label="Смотреть условия продукта: {{ product.title }}">Смотреть условия</a>
+            </div>
+          </article>
+        {% empty %}
+          <p class="products__empty">Сейчас нет доступных предложений.</p>
+        {% endfor %}
+      </div>
+      <p class="products__empty" id="products-empty" hidden>По выбранному фильтру предложений нет. Попробуйте изменить фильтр.</p>
+    </section>
+
+    <footer class="disclaimer" id="about">
       {% if legal_items %}
         <details class="footer-legal">
           <summary class="footer-legal__summary">
             Юридическая информация о МФО
             <span class="footer-legal__sign" aria-hidden="true"></span>
           </summary>
-          <br>
           <div class="footer-legal__list">
             {% for provider_name, legal_info in legal_items %}
               <section class="footer-legal__item">
-                <h3 class="footer-legal__name">
-                  {{ provider_name }}
-                </h3>
-                <p class="footer-legal__lines">
-                  {{ legal_info|linebreaksbr }}
-                </p>
-                <br>
+                <h3 class="footer-legal__name">{{ provider_name }}</h3>
+                <p class="footer-legal__lines">{{ legal_info|linebreaksbr }}</p>
               </section>
             {% endfor %}
           </div>
         </details>
       {% endif %}
-      <br>
+
       <p class="disclaimer__warning">
         Оценивайте свои финансовые возможности и риски. Изучите все условия
         кредита (займа).
@@ -235,15 +158,11 @@
       </p>
 
       <p class="disclamer__links">
-        <a href="{% url 'showcase:privacy_policy' %}">
-          Политика обработки персональных данных
-        </a>
+        <a href="{% url 'showcase:privacy_policy' %}">Политика обработки персональных данных</a>
       </p>
-      
       <span class="disclaimer__age">18+</span>
     </footer>
   </main>
-
-  <script src="{% static 'showcase/js/showcase.js' %}"></script>
+  <script src="{% static 'showcase/js/showcase.js' %}" defer></script>
 </body>
 </html>

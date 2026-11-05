@@ -5,23 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
   <title>{% block title %}ФинПарус · кабинет{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'showcase/css/dashboard.css' %}">
 </head>
-
 <body>
-  <main class="container">
+  <main class="container dashboard-container">
     <header class="topbar">
-      <a class="brand" href="{% url 'showcase:dashboard' %}">ФинПарус</a>
-
-      <nav class="topbar__nav">
-        <a class="topbar__link" href="{% url 'showcase:product_showcase' %}">
-          Витрина ↗
-        </a>
-
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        ФинПарус
+      </a>
+      <nav class="topbar__nav" aria-label="">
+        <a class="btn btn--ghost btn--sm" href="{% url 'showcase:product_showcase' %}">Открыть витрину</a>
         {% if user.is_authenticated %}
           <span class="topbar__user">{{ user.username }}</span>
-
           <form method="post" action="{% url 'showcase:dashboard_logout' %}">
             {% csrf_token %}
             <button class="btn btn--ghost btn--sm" type="submit">Выйти</button>
@@ -31,11 +28,9 @@
     </header>
 
     {% if messages %}
-      <div class="notices">
+      <div class="notices" role="status" aria-live="polite">
         {% for message in messages %}
-          <div class="notice notice--{{ message.tags }}">
-            {{ message }}
-          </div>
+          <div class="notice notice--{{ message.tags }}">{{ message }}</div>
         {% endfor %}
       </div>
     {% endif %}

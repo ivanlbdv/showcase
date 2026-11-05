@@ -1,214 +1,90 @@
 {% extends "dashboard/base.html" %}
 {% load static %}
-
 {% block title %}ФинПарус · управление витриной{% endblock %}
-
 {% block content %}
+  <header class="dashboard-intro">
+    <div>
+      <p class="page-eyebrow">ФинПарус · Рабочее пространство</p>
+      <h1>Управление витриной</h1>
+      <p>Контролируйте публикацию предложений и обновляйте данные каталога.</p>
+    </div>
+  </header>
+
   <section class="stats" aria-label="Статистика витрины">
-    <div class="stat">
-      <span class="stat__value">{{ stats.total }}</span>
-      <span class="stat__label">всего</span>
-    </div>
-    <div class="stat">
-      <span class="stat__value">{{ showcase_count }}</span>
-      <span class="stat__label">на витрине</span>
-    </div>
-    <div class="stat">
-      <span class="stat__value">{{ stats.priority }}</span>
-      <span class="stat__label">приоритетных</span>
-    </div>
-    <div class="stat">
-      <span class="stat__value">{{ stats.hidden }}</span>
-      <span class="stat__label">скрытых</span>
-    </div>
+    <div class="stat"><span class="stat__value">{{ stats.total }}</span><span class="stat__label">Всего предложений</span></div>
+    <div class="stat"><span class="stat__value">{{ showcase_count }}</span><span class="stat__label">На витрине</span></div>
+    <div class="stat"><span class="stat__value">{{ stats.priority }}</span><span class="stat__label">Приоритетных</span></div>
+    <div class="stat"><span class="stat__value">{{ stats.hidden }}</span><span class="stat__label">Скрытых</span></div>
   </section>
 
   <div class="controls">
     <nav class="filters" aria-label="Фильтрация офферов">
-      <button
-        class="filter is-active"
-        type="button"
-        data-filter="all"
-        aria-pressed="true"
-      >
-        Все
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="active"
-        aria-pressed="false"
-      >
-        На витрине
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="priority"
-        aria-pressed="false"
-      >
-        Приоритетные
-      </button>
-
-      <button
-        class="filter"
-        type="button"
-        data-filter="hidden"
-        aria-pressed="false"
-      >
-        Скрытые
-      </button>
+      <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Все</button>
+      <button class="filter" type="button" data-filter="active" aria-pressed="false">На витрине</button>
+      <button class="filter" type="button" data-filter="priority" aria-pressed="false">Приоритетные</button>
+      <button class="filter" type="button" data-filter="hidden" aria-pressed="false">Скрытые</button>
     </nav>
-
     <form class="sync-form" method="post" action="{% url 'showcase:dashboard_sync' %}">
       {% csrf_token %}
-      <button class="btn btn--primary" type="submit" title="Синхронизировать офферы с API Leads.su">
-        Синхронизировать
-      </button>
+      <button class="btn btn--primary" type="submit" title="Синхронизировать офферы с API Leads.su">Синхронизировать с Leads.su ↻</button>
     </form>
   </div>
 
-  <form
-    id="bulk-form"
-    method="post"
-    action="{% url 'showcase:dashboard_bulk' %}"
-  >
+  <form id="bulk-form" method="post" action="{% url 'showcase:dashboard_bulk' %}">
     {% csrf_token %}
-
     {% if products %}
-
-      <div class="bulk-bar">
-        <h2 class="bulk-bar__title">Действие с отмеченными</h2>
-
+      <div class="bulk-bar bulk-bar--disabled">
+        <h2 class="bulk-bar__title">Действия с выбранными</h2>
         <div class="bulk-bar__actions">
-          <button
-            class="btn btn--ghost btn--sm"
-            type="submit"
-            name="action"
-            value="toggle_visible"
-          >
-            Переключить видимость на витрине
-          </button>
-
-          <button
-            class="btn btn--ghost btn--sm"
-            type="submit"
-            name="action"
-            value="toggle_priority"
-          >
-            Переключить приоритет
-          </button>
-
-          <button
-            class="btn btn--danger btn--sm"
-            type="submit"
-            name="action"
-            value="delete"
-            onclick="return confirm('Удалить выбранные офферы без возможности восстановления?')"
-          >
-            Удалить
-          </button>
+          <button class="btn btn--ghost btn--sm" type="submit" name="action" value="toggle_visible" disabled>Переключить видимость</button>
+          <button class="btn btn--ghost btn--sm" type="submit" name="action" value="toggle_priority" disabled>Переключить приоритет</button>
+          <button class="btn btn--danger btn--sm" type="submit" name="action" value="delete" data-confirm="Удалить выбранные офферы без возможности восстановления?" disabled>Удалить выбранные</button>
         </div>
       </div>
-    {% endif %}
-
-    {% if products %}
       <div class="select-all-row">
-        <label class="check-all">
-          <input type="checkbox" id="select-all">
-          <span>Выбрать все</span>
-        </label>
+        <label class="check-all"><input type="checkbox" id="select-all"><span>Выбрать все видимые</span></label>
       </div>
     {% endif %}
 
     <section class="offers" aria-label="Список офферов">
       {% for product in products %}
-        <article
-          class="offer{% if not product.is_active %} offer--dimmed{% endif %}"
-          data-active="{% if product.is_active %}true{% else %}false{% endif %}"
-          data-priority="{% if product.is_priority_offer %}true{% else %}false{% endif %}"
-          data-showcase="{% if product.pk in showcase_product_ids %}true{% else %}false{% endif %}"
-        >
-          <input
-            class="offer__check"
-            type="checkbox"
-            name="pks"
-            value="{{ product.pk }}"
-            {% comment %} data-state="{% if product.is_active %}active{% else %}hidden{% endif %}" {% endcomment %}
-            aria-label="Отметить оффер {{ product.provider_name }}"
-          >
-
+        <article class="offer{% if not product.is_active %} offer--dimmed{% endif %}"
+                 data-active="{% if product.is_active %}true{% else %}false{% endif %}"
+                 data-priority="{% if product.is_priority_offer %}true{% else %}false{% endif %}"
+                 data-showcase="{% if product.pk in showcase_product_ids %}true{% else %}false{% endif %}">
+          <input class="offer__check" type="checkbox" name="pks" value="{{ product.pk }}" aria-label="Отметить оффер {{ product.provider_name }}">
           <div class="offer__id">
             {% if product.logo_url %}
               <img class="offer__logo" src="{{ product.logo_url }}" alt="Логотип {{ product.provider_name }}" loading="lazy">
             {% else %}
-              <span class="offer__logo offer__logo--empty">—</span>
+              <span class="offer__logo offer__logo--empty" aria-hidden="true">—</span>
             {% endif %}
-
             <h2 class="offer__title">{{ product.provider_name }}</h2>
           </div>
-
           <dl class="offer__data">
             <div><dt>Сумма</dt><dd>{{ product.amount_text }}</dd></div>
             <div><dt>Срок</dt><dd>{{ product.term_text }}</dd></div>
             <div><dt>Ставка</dt><dd>{{ product.rate_text }}</dd></div>
             <div><dt>ПСК</dt><dd>{{ product.psk_text|default:"—" }}</dd></div>
           </dl>
-
           <div class="offer__side">
-            <p class="offer__epc" title="EPC по данным Leads.su">
-              EPC {{ product.other_epc|floatformat:"-2" }}
-            </p>
-
+            <p class="offer__epc" title="EPC по данным Leads.su">EPC {{ product.other_epc|floatformat:"-2" }}</p>
             <div class="offer__actions">
-              <button
-                class="btn btn--ghost btn--sm"
-                type="submit"
-                formaction="{% url 'showcase:dashboard_toggle_active' product.pk %}"
-              >
-                {% if product.is_active %}Скрыть{% else %}Показать{% endif %}
-              </button>
-
-              <button
-                class="btn btn--ghost btn--sm{% if product.is_priority_offer %} is-toggled{% endif %}"
-                type="submit"
-                formaction="{% url 'showcase:dashboard_toggle_priority' product.pk %}"
-              >
-                {% if product.is_priority_offer %}Снять приоритет{% else %}Приоритет{% endif %}
-              </button>
-
-              <a class="btn btn--ghost btn--sm" href="{% url 'showcase:dashboard_edit' product.pk %}">
-                Изменить
-              </a>
-
-              <button
-                class="btn btn--danger btn--sm"
-                type="submit"
-                formaction="{% url 'showcase:dashboard_delete' product.pk %}"
-                onclick="return confirm('Удалить этот оффер без возможности восстановления?')"
-              >
-                Удалить
-              </button>
-
+              <button class="btn btn--ghost btn--sm" type="submit" formaction="{% url 'showcase:dashboard_toggle_active' product.pk %}">{% if product.is_active %}Скрыть{% else %}Показать{% endif %}</button>
+              <button class="btn btn--ghost btn--sm{% if product.is_priority_offer %} is-toggled{% endif %}" type="submit" formaction="{% url 'showcase:dashboard_toggle_priority' product.pk %}">{% if product.is_priority_offer %}Снять приоритет{% else %}Приоритет{% endif %}</button>
+              <a class="btn btn--ghost btn--sm" href="{% url 'showcase:dashboard_edit' product.pk %}">Изменить</a>
+              <button class="btn btn--danger btn--sm" type="submit" formaction="{% url 'showcase:dashboard_delete' product.pk %}" data-confirm="Удалить этот оффер без возможности восстановления?">Удалить</button>
               {% if product.product_url %}
-                <a class="btn btn--ghost btn--sm" href="{{ product.product_url }}" target="_blank" rel="noopener" title="{{ product.product_url }}">
-                  Открыть ↗
-                </a>
+                <a class="btn btn--ghost btn--sm" href="{{ product.product_url }}" target="_blank" rel="noopener" title="{{ product.product_url }}">Открыть</a>
               {% endif %}
             </div>
           </div>
         </article>
       {% empty %}
-        <p class="offers__empty">
-          Офферов пока нет — нажмите «Синхронизировать».
-        </p>
+        <p class="offers__empty">Офферов пока нет — нажмите «Синхронизировать с Leads.su».</p>
       {% endfor %}
     </section>
-    <p class="offers__empty" id="filter-empty" hidden>
-      Нет офферов, соответствующих выбранному фильтру.
-    </p>
+    <p class="offers__empty" id="filter-empty" hidden>Нет офферов, соответствующих выбранному фильтру.</p>
   </form>
-  <script src="{% static 'showcase/js/dashboard.js' %}"></script>
+  <script src="{% static 'showcase/js/dashboard.js' %}" defer></script>
 {% endblock %}

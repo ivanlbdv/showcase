@@ -1,46 +1,7 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>404 - Страница не найдена</title>
-  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
-</head>
-<body>
-  <main class="container">
-    <header class="topbar">
-      <a class="brand" href="{% url 'showcase:product_showcase' %}">
-        ФинПарус
-      </a>
-      <p class="status">
-        Служебная страница
-      </p>
-    </header>
-
-    <section class="error" aria-labelledby="error-title">
-      <div class="error__main">
-        <p class="error__eyebrow">Ошибка маршрута</p>
-        <p class="error__code" aria-label="Код ошибки 404">404</p>
-        <h1 id="error-title" class="error__title">
-          Страница
-          <br>
-          <strong>
-            не найдена.
-          </strong>
-        </h1>
-      </div>
-
-      <div class="error__aside">
-        <p class="error__text">
-          Возможно, ссылка устарела, адрес введен с ошибкой или предложение больше не доступно.
-        </p>
-        <a class="error__action" href="{% url 'showcase:product_showcase' %}">
-          Вернуться к витрине
-        </a>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+{% extends "errors/base.html" %}
+{% block title %}404 · Страница не найдена · ФинПарус{% endblock %}
+{% block eyebrow %}Ошибка маршрута{% endblock %}
+{% block code %}404{% endblock %}
+{% block code_visual %}404{% endblock %}
+{% block heading %}Страница <strong>не найдена.</strong>{% endblock %}
+{% block description %}Возможно, ссылка устарела, адрес введён с ошибкой или предложение больше не доступно.{% endblock %}

@@ -1,39 +1,34 @@
 {% extends "dashboard/base.html" %}
-
-{% block title %}ФинПарус · вход{% endblock %}
-
+{% block title %}ФинПарус · вход в кабинет{% endblock %}
 {% block content %}
-  <section class="auth" aria-labelledby="auth-title">
-    <h1 id="auth-title" class="auth__title">
-      Личный кабинет
-    </h1>
-
-    <p class="auth__note">
-      Управление витриной финансовых предложений.
-    </p>
-
-    {% if form.non_field_errors %}
-      {% for error in form.non_field_errors %}
-        <div class="notice notice--error">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-
-    <form class="auth__form" method="post">
-      {% csrf_token %}
-
-      <label class="field">
-        <span class="field__label">Имя пользователя</span>
-        {{ form.username }}
-      </label>
-
-      <label class="field">
-        <span class="field__label">Пароль</span>
-        {{ form.password }}
-      </label>
-      <br>
-      <button class="btn btn--primary btn--wide" type="submit">
-        Войти
-      </button>
-    </form>
+  <section class="auth-layout" aria-labelledby="auth-title">
+    <div class="auth-aside">
+      <p class="auth-aside__eyebrow">ФинПарус · управление</p>
+      <h1 class="auth-aside__title" id="auth-title">Всё под<br><span>контролем.</span></h1>
+      <p class="auth-aside__text">Войдите в рабочее пространство, чтобы управлять предложениями, публикацией и приоритетами витрины.</p>
+    </div>
+    <div class="auth">
+      <h2 class="auth__title">Вход в кабинет</h2>
+      <p class="auth__note">Используйте учётные данные сотрудника.</p>
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <div class="notice notice--error" role="alert">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+      <form class="auth__form" method="post">
+        {% csrf_token %}
+        <label class="field">
+          <span class="field__label">Имя пользователя</span>
+          {{ form.username }}
+          {% for error in form.username.errors %}<span class="field__help" role="alert">{{ error }}</span>{% endfor %}
+        </label>
+        <label class="field">
+          <span class="field__label">Пароль</span>
+          {{ form.password }}
+          {% for error in form.password.errors %}<span class="field__help" role="alert">{{ error }}</span>{% endfor %}
+        </label>
+        <button class="btn btn--primary btn--wide" type="submit">Войти в кабинет <span aria-hidden="true">→</span></button>
+      </form>
+    </div>
   </section>
 {% endblock %}

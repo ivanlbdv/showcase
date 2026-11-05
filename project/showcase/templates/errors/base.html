@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#163300">
+  <title>{% block title %}Ошибка · ФинПарус{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
+</head>
+<body class="error-page">
+  <main class="container">
+    <header class="topbar">
+      <a class="brand" href="{% url 'showcase:product_showcase' %}">
+        ФинПарус
+      </a>
+      <p class="status">Служебная страница</p>
+    </header>
+    <section class="error" aria-labelledby="error-title">
+      <div class="error__main">
+        <p class="error__eyebrow">{% block eyebrow %}Системное сообщение{% endblock %}</p>
+        <p class="error__code" aria-label="Код ошибки {% block code %}{% endblock %}">{% block code_visual %}{% endblock %}</p>
+        <h1 class="error__title" id="error-title">{% block heading %}{% endblock %}</h1>
+      </div>
+      <div class="error__aside">
+        <p class="error__text">{% block description %}{% endblock %}</p>
+        <a class="error__action" href="{% url 'showcase:product_showcase' %}">{% block action %}Вернуться к витрине{% endblock %}</a>
+      </div>
+    </section>
+    <footer class="error__meta">
+      <span>ФинПарус · Информационный сервис</span>
+      <span>18+</span>
+    </footer>
+  </main>
+</body>
+</html>

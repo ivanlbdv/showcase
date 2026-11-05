@@ -1,47 +1,7 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>400 - Некорректный запрос</title>
-  <link rel="stylesheet" href="{% static 'showcase/css/errors.css' %}">
-</head>
-<body>
-  <main class="container">
-    <header class="topbar">
-      <a class="brand" href="{% url 'showcase:product_showcase' %}">
-        ФинПарус
-      </a>
-      <p class="status">
-        Служебная страница
-      </p>
-    </header>
-
-    <section class="error" aria-labelledby="error-title">
-      <div class="error__main">
-        <p class="error__eyebrow">Некорректный запрос</p>
-        <p class="error__code" aria-label="Код ошибки 400">400</p>
-        <h1 id="error-title" class="error__title">
-          Запрос
-          <strong>
-            не удалось
-            <br>
-            обработать.
-          </strong>
-        </h1>
-      </div>
-
-      <div class="error__aside">
-        <p class="error__text">
-          Проверьте адрес страницы и попробуйте выполнить действие еще раз.
-        </p>
-        <a class="error__action" href="{% url 'showcase:product_showcase' %}">
-          Вернуться к витрине
-        </a>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+{% extends "errors/base.html" %}
+{% block title %}400 · Некорректный запрос · ФинПарус{% endblock %}
+{% block eyebrow %}Некорректный запрос{% endblock %}
+{% block code %}400{% endblock %}
+{% block code_visual %}400{% endblock %}
+{% block heading %}Запрос <strong>не удалось обработать.</strong>{% endblock %}
+{% block description %}Проверьте адрес страницы и попробуйте выполнить действие ещё раз.{% endblock %}
