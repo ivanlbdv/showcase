@@ -671,14 +671,14 @@
 @media (max-width: 680px) {
   .sort-control {
     width: 100%;
-    min-height: 48px;
+    min-height: 42px;
   }
 
   .sort-control__select {
     flex: 1;
     min-width: 0;
-    min-height: 52px;
-    height: 52px;
+    min-height: 42px;
+    height: 42px;
     box-sizing: border-box;
     padding: 0 14px;
     font-size: 14px;
