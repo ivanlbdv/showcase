@@ -24,6 +24,16 @@
       <button class="filter" type="button" data-filter="priority" aria-pressed="false">Приоритетные</button>
       <button class="filter" type="button" data-filter="hidden" aria-pressed="false">Скрытые</button>
     </nav>
+    <div class="sort-control">
+      <label for="offer-sort">Сортировка</label>
+      <select id="offer-sort" class="sort-control__select">
+        <option value="default">По умолчанию</option>
+        <option value="name-asc">Название: А → Я</option>
+        <option value="name-desc">Название: Я → А</option>
+        <option value="epc-desc">EPC: сначала высокий</option>
+        <option value="epc-asc">EPC: сначала низкий</option>
+      </select>
+    </div>
     <form class="sync-form" method="post" action="{% url 'showcase:dashboard_sync' %}">
       {% csrf_token %}
       <button class="btn btn--primary" type="submit" title="Синхронизировать офферы с API Leads.su">Синхронизировать с Leads.su ↻</button>
@@ -51,7 +61,9 @@
         <article class="offer{% if not product.is_active %} offer--dimmed{% endif %}"
                  data-active="{% if product.is_active %}true{% else %}false{% endif %}"
                  data-priority="{% if product.is_priority_offer %}true{% else %}false{% endif %}"
-                 data-showcase="{% if product.pk in showcase_product_ids %}true{% else %}false{% endif %}">
+                 data-showcase="{% if product.pk in showcase_product_ids %}true{% else %}false{% endif %}"
+                 data-sort-name="{{ product.provider_name|lower }}"
+                 data-sort-epc="{{ product.other_epc|default_if_none:0 }}">
           <input class="offer__check" type="checkbox" name="pks" value="{{ product.pk }}" aria-label="Отметить оффер {{ product.provider_name }}">
           <div class="offer__id">
             {% if product.logo_url %}
@@ -62,22 +74,84 @@
             <h2 class="offer__title">{{ product.provider_name }}</h2>
           </div>
           <dl class="offer__data">
-            <div><dt>Сумма</dt><dd>{{ product.amount_text }}</dd></div>
-            <div><dt>Срок</dt><dd>{{ product.term_text }}</dd></div>
-            <div><dt>Ставка</dt><dd>{{ product.rate_text }}</dd></div>
-            <div><dt>ПСК</dt><dd>{{ product.psk_text|default:"—" }}</dd></div>
-          </dl>
-          <div class="offer__side">
-            <p class="offer__epc" title="EPC по данным Leads.su">EPC {{ product.other_epc|floatformat:"-2" }}</p>
-            <div class="offer__actions">
-              <button class="btn btn--ghost btn--sm" type="submit" formaction="{% url 'showcase:dashboard_toggle_active' product.pk %}">{% if product.is_active %}Скрыть{% else %}Показать{% endif %}</button>
-              <button class="btn btn--ghost btn--sm{% if product.is_priority_offer %} is-toggled{% endif %}" type="submit" formaction="{% url 'showcase:dashboard_toggle_priority' product.pk %}">{% if product.is_priority_offer %}Снять приоритет{% else %}Приоритет{% endif %}</button>
-              <a class="btn btn--ghost btn--sm" href="{% url 'showcase:dashboard_edit' product.pk %}">Изменить</a>
-              <button class="btn btn--danger btn--sm" type="submit" formaction="{% url 'showcase:dashboard_delete' product.pk %}" data-confirm="Удалить этот оффер без возможности восстановления?">Удалить</button>
-              {% if product.product_url %}
-                <a class="btn btn--ghost btn--sm" href="{{ product.product_url }}" target="_blank" rel="noopener" title="{{ product.product_url }}">Открыть</a>
-              {% endif %}
+            <div>
+              <dt>Сумма</dt>
+              <dd>{{ product.amount_text }}</dd>
             </div>
+            <div>
+              <dt>Срок</dt>
+              <dd>{{ product.term_text }}</dd>
+            </div>
+            <div>
+              <dt>ПСК</dt>
+              <dd>{{ product.psk_text|default:"—" }}</dd>
+            </div>
+            <div>
+              <dt>Ставка</dt>
+              <dd>{{ product.rate_text }}</dd>
+            </div>
+          </dl>
+
+          <div class="offer__side">
+            <p class="offer__epc" title="EPC по данным Leads.su">
+              EPC {{ product.other_epc|floatformat:"-2" }}
+            </p>
+
+            <details class="offer__menu">
+              <summary
+                class="offer__menu-trigger"
+                aria-label="Действия с предложением {{ product.provider_name }}"
+                title="Действия"
+              >
+                <span aria-hidden="true">⋯</span>
+              </summary>
+
+              <div class="offer__menu-list">
+                <button
+                  class="offer__menu-item"
+                  type="submit"
+                  formaction="{% url 'showcase:dashboard_toggle_active' product.pk %}"
+                >
+                  {% if product.is_active %}Скрыть{% else %}Показать{% endif %}
+                </button>
+
+                <button
+                  class="offer__menu-item{% if product.is_priority_offer %} is-toggled{% endif %}"
+                  type="submit"
+                  formaction="{% url 'showcase:dashboard_toggle_priority' product.pk %}"
+                >
+                  {% if product.is_priority_offer %}Снять приоритет{% else %}Приоритет{% endif %}
+                </button>
+
+                <a
+                  class="offer__menu-item"
+                  href="{% url 'showcase:dashboard_edit' product.pk %}"
+                >
+                  Изменить
+                </a>
+
+                <button
+                  class="offer__menu-item offer__menu-item--danger"
+                  type="submit"
+                  formaction="{% url 'showcase:dashboard_delete' product.pk %}"
+                  data-confirm="Удалить этот оффер без возможности восстановления?"
+                >
+                  Удалить
+                </button>
+
+                {% if product.product_url %}
+                  <a
+                    class="offer__menu-item"
+                    href="{{ product.product_url }}"
+                    target="_blank"
+                    rel="noopener"
+                    title="{{ product.product_url }}"
+                  >
+                    Открыть
+                  </a>
+                {% endif %}
+              </div>
+            </details>
           </div>
         </article>
       {% empty %}

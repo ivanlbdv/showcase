@@ -17,6 +17,61 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".filter[data-filter]"),
   );
   const filterEmpty = document.querySelector("#filter-empty");
+  const offersContainer = form.querySelector(".offers");
+  const sortSelect = document.querySelector("#offer-sort");
+
+  const originalOrder = new Map(
+    offers.map((offer, index) => [offer, index]),
+  );
+
+  const sortOffers = () => {
+    if (!offersContainer || !sortSelect) {
+      return;
+    }
+
+    const sortType = sortSelect.value;
+    const sortedOffers = [...offers];
+
+    sortedOffers.sort((a, b) => {
+      if (sortType === "default") {
+        return originalOrder.get(a) - originalOrder.get(b);
+      }
+
+      if (sortType === "name-asc" || sortType === "name-desc") {
+        const result = (a.dataset.sortName || "").localeCompare(
+          b.dataset.sortName || "",
+          "ru",
+          { sensitivity: "base" },
+        );
+
+        return sortType === "name-asc" ? result : -result;
+      }
+
+      if (sortType === "epc-asc" || sortType === "epc-desc") {
+        const epcA = Number.parseFloat(
+          (a.dataset.sortEpc || "0").replace(",", "."),
+        ) || 0;
+
+        const epcB = Number.parseFloat(
+          (b.dataset.sortEpc || "0").replace(",", "."),
+        ) || 0;
+
+        return sortType === "epc-asc"
+          ? epcA - epcB
+          : epcB - epcA;
+      }
+
+      return 0;
+    });
+
+    sortedOffers.forEach((offer) => {
+      offersContainer.appendChild(offer);
+    });
+  };
+
+  if (sortSelect) {
+    sortSelect.addEventListener("change", sortOffers);
+  }
 
   let currentFilter = "all";
 
