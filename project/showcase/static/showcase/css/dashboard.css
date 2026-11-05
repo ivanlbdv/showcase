@@ -677,7 +677,9 @@
   .sort-control__select {
     flex: 1;
     min-width: 0;
-    min-height: 48px;
+    min-height: 52px;
+    height: 52px;
+    box-sizing: border-box;
     padding: 0 14px;
     font-size: 14px;
   }
