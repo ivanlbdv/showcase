@@ -480,8 +480,9 @@
 
 .offer__data {
   display: grid;
-  width: 700px;
-  min-width: 700px;
+  width: 100%;
+  max-width: 500px;
+  min-width: 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
   gap: 10px;
@@ -623,6 +624,7 @@
 
   .offer__data {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
@@ -684,3 +686,5 @@
     font-size: 14px;
   }
 }
+
+@media (max-width: 1023px) {
