@@ -1,4 +1,3 @@
-{% include "showcase/includes/cookie_banner.html" %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -166,6 +165,9 @@
       <span class="disclaimer__age">18+</span>
     </footer>
   </main>
+
+  {% include "showcase/includes/cookie_banner.html" %}
+  
   <script src="{% static 'showcase/js/showcase.js' %}" defer></script>
   <script src="{% static 'showcase/js/cookie-consent.js' %}" defer></script>
 </body>
