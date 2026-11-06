@@ -1,3 +1,4 @@
+{% include "showcase/includes/cookie_banner.html" %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -8,6 +9,7 @@
   <meta name="theme-color" content="#ffffff">
   <title>ФинПарус — подбор займов от микрофинансовых организаций</title>
   <link rel="stylesheet" href="{% static 'showcase/css/showcase.css' %}">
+  <link rel="stylesheet" href="{% static 'showcase/css/cookie-banner.css' %}">
   <link rel="icon" href="{% static 'showcase/images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
@@ -157,10 +159,14 @@
 
       <p class="disclamer__links">
         <a href="{% url 'showcase:privacy_policy' %}">Политика обработки персональных данных</a>
+        <br>
+        <br>
+        <a href="#" data-cookie-settings>Настройки cookie</a>
       </p>
       <span class="disclaimer__age">18+</span>
     </footer>
   </main>
   <script src="{% static 'showcase/js/showcase.js' %}" defer></script>
+  <script src="{% static 'showcase/js/cookie-consent.js' %}" defer></script>
 </body>
 </html>

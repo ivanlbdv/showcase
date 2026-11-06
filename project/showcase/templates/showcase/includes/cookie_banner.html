@@ -1,0 +1,23 @@
+<div class="cookie-banner" id="cookie-banner" role="dialog"
+     aria-label="Настройки файлов cookie" aria-describedby="cookie-banner-text" hidden>
+  <div class="cookie-banner__content">
+    <p class="cookie-banner__title">Настройки конфиденциальности</p>
+    <p class="cookie-banner__text" id="cookie-banner-text">
+      Мы используем файлы cookie и Яндекс.Метрику, чтобы анализировать
+      посещаемость и улучшать работу сайта. Вы можете разрешить или
+      отклонить использование аналитики.
+      <a href="{% url 'showcase:privacy_policy' %}#cookies">Подробнее</a>.
+    </p>
+  </div>
+
+  <div class="cookie-banner__actions">
+    <button class="cookie-banner__button cookie-banner__button--secondary"
+            type="button" data-cookie-choice="rejected">
+      Отклонить
+    </button>
+    <button class="cookie-banner__button cookie-banner__button--secondary"
+            type="button" data-cookie-choice="accepted">
+      Принять
+    </button>
+  </div>
+</div>
