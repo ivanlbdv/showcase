@@ -1,4 +1,5 @@
 from django.db.models import Max
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -70,4 +71,49 @@ def privacy_policy(request):
     return render(
         request,
         "showcase/privacy.html",
+    )
+
+
+SITE_ORIGIN = "https://finparus.ru"
+
+
+def robots_txt(request):
+    """Правила обхода сайта поисковыми роботами."""
+
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        f"Sitemap: {SITE_ORIGIN}/sitemap.xml\n"
+    )
+
+    return HttpResponse(
+        content,
+        content_type="text/plain; charset=utf-8",
+    )
+
+
+def sitemap_xml(request):
+    """XML-карта публичных страниц сайта."""
+
+    urls = (
+        f"{SITE_ORIGIN}/",
+        f"{SITE_ORIGIN}/privacy/",
+    )
+
+    url_entries = "\n".join(
+        f"  <url><loc>{url}</loc></url>"
+        for url in urls
+    )
+
+    content = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{url_entries}\n"
+        "</urlset>\n"
+    )
+
+    return HttpResponse(
+        content,
+        content_type="application/xml; charset=utf-8",
     )

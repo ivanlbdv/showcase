@@ -1,11 +1,13 @@
 from django.urls import path
 
 from . import dashboard_views
-from .views import privacy_policy, product_showcase
+from .views import privacy_policy, product_showcase, robots_txt, sitemap_xml
 
 app_name = 'showcase'
 
 urlpatterns = [
+    path('robots.txt', robots_txt, name='robots_txt'),
+    path('sitemap.xml', sitemap_xml, name='sitemap_xml'),
     path('', product_showcase, name='product_showcase'),
     path('privacy/', privacy_policy, name='privacy_policy'),
     path('lk/', dashboard_views.dashboard, name='dashboard'),
