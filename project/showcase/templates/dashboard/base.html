@@ -8,14 +8,18 @@
   <meta name="theme-color" content="#ffffff">
   <title>{% block title %}ФинПарус · кабинет{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'showcase/css/dashboard.css' %}">
-  <link rel="icon" href="{% static 'showcase/images/favicon.ico' %}" type="image/x-icon">
+  <link rel="icon"
+        type="image/svg+xml"
+        href="{% static 'showcase/images/finparus.svg' %}">
+
+  <link rel="icon"
+        href="{% static 'showcase/images/favicon.ico' %}"
+        sizes="any">
 </head>
 <body>
   <main class="container dashboard-container">
     <header class="topbar">
-      <a class="brand" href="{% url 'showcase:product_showcase' %}">
-        ФинПарус
-      </a>
+      {% include "showcase/includes/brand.html" %}
       <nav class="topbar__nav" aria-label="">
         <a class="btn btn--ghost btn--sm" href="{% url 'showcase:product_showcase' %}">Открыть витрину</a>
         {% if user.is_authenticated %}

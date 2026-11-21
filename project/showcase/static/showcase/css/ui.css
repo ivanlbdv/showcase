@@ -114,23 +114,45 @@ summary:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 
+/* Brand logo — ФинПарус */
+
 .brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   color: var(--forest);
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -.045em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
-.brand::before {
-  width: 13px;
-  height: 13px;
-  border-radius: 4px 4px 4px 1px;
-  background: var(--lime);
-  content: "";
+.brand__icon {
+  display: block;
+  width: 39px;
+  height: 31px;
+  flex: 0 0 auto;
+}
+
+.brand__name {
+  color: var(--forest);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: 1;
+}
+
+.brand:hover {
+  opacity: .82;
+}
+
+@media (max-width: 480px) {
+  .brand__icon {
+    width: 33px;
+    height: 26px;
+  }
+
+  .brand__name {
+    font-size: 19px;
+  }
 }
 
 .status {

@@ -34,22 +34,19 @@
     rel="stylesheet"
     href="{% static 'showcase/css/cookie-banner.css' %}"
   >
-  <link
-    rel="icon"
-    href="{% static 'showcase/images/favicon.ico' %}"
-    type="image/x-icon"
-  >
+  <link rel="icon"
+        type="image/svg+xml"
+        href="{% static 'showcase/images/finparus.svg' %}">
+
+  <link rel="icon"
+        href="{% static 'showcase/images/favicon.ico' %}"
+        sizes="any">
 </head>
 
 <body>
   <main class="container">
     <header class="topbar">
-      <a
-        class="brand"
-        href="{% url 'showcase:product_showcase' %}"
-      >
-        ФинПарус
-      </a>
+      {% include "showcase/includes/brand.html" %}
 
       <p class="status">
         Персональные данные
