@@ -21,12 +21,12 @@
     <header class="topbar">
       {% include "showcase/includes/brand.html" %}
       <nav class="topbar__nav" aria-label="">
-        <a class="btn btn--ghost btn--sm" href="{% url 'showcase:product_showcase' %}">Открыть витрину</a>
+        <a class="btn btn--primary btn--sm" href="{% url 'showcase:product_showcase' %}">Витрина</a>
         {% if user.is_authenticated %}
           <span class="topbar__user">{{ user.username }}</span>
           <form method="post" action="{% url 'showcase:dashboard_logout' %}">
             {% csrf_token %}
-            <button class="btn btn--ghost btn--sm" type="submit">Выйти</button>
+            <button class="btn btn--danger btn--sm" type="submit">Выйти</button>
           </form>
         {% endif %}
       </nav>
