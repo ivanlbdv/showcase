@@ -48,7 +48,7 @@
   justify-content: space-between;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
-  background: var(--surface-soft);
+  background: var(--fog);
   padding: 17px 19px;
 }
 
@@ -696,7 +696,7 @@
   gap: 12px;
   min-width: 0;
   padding: 20px 24px;
-  background: var(--surface-soft);
+  background: var(--fog);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
 }
@@ -740,5 +740,90 @@
 
   .sync-status__value {
     font-size: 18px;
+  }
+}
+
+/* =========================================
+   Full-width dashboard layout
+   ========================================= */
+
+html,
+body.dashboard-page {
+  min-height: 100%;
+}
+
+body.dashboard-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-soft);
+}
+
+/* Header */
+.dashboard-page .site-header {
+  width: 100%;
+  flex: 0 0 auto;
+  background: var(--linen);
+}
+
+.dashboard-page .site-header .topbar {
+  border-bottom-color: var(--line);
+}
+
+/* Main content */
+.dashboard-page .dashboard-container {
+  width: min(calc(100% - 48px), var(--content-width));
+  flex: 1 0 auto;
+  padding-bottom: 64px;
+}
+
+/* Footer */
+.dashboard-footer {
+  width: 100%;
+  flex: 0 0 auto;
+  background: var(--charcoal);
+}
+
+.dashboard-footer__inner {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--linen);
+  font-size: 12px;
+}
+
+.dashboard-footer__inner nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard-footer__inner a {
+  color: var(--lime);
+  text-underline-offset: 3px;
+}
+
+.dashboard-footer__inner a:hover {
+  color: var(--linen);
+}
+
+@media (max-width: 680px) {
+  .dashboard-page .dashboard-container {
+    width: min(calc(100% - 32px), var(--content-width));
+  }
+
+  .dashboard-footer__inner {
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .dashboard-footer__inner nav {
+    flex-wrap: wrap;
   }
 }

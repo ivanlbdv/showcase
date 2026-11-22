@@ -644,3 +644,46 @@ body {
 .site-footer .footer-legal__sign::after {
   background: var(--linen);
 }
+
+/* =========================================
+   Privacy page — full-width layout
+   ========================================= */
+
+body {
+  background: var(--surface-soft);
+}
+
+.privacy-site-footer {
+  width: 100%;
+  background: var(--charcoal);
+}
+
+.privacy-site-footer__inner {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--linen);
+  font-size: 12px;
+}
+
+.privacy-site-footer__inner a {
+  color: var(--lime);
+  text-underline-offset: 3px;
+}
+
+.privacy-site-footer__inner a:hover {
+  color: var(--linen);
+}
+
+@media (max-width: 680px) {
+  .privacy-site-footer__inner {
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}

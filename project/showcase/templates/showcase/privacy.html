@@ -44,15 +44,20 @@
 </head>
 
 <body>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="topbar">
+        {% include "showcase/includes/brand.html" %}
+
+        <p class="status">
+          Персональные данные
+        </p>
+      </div>
+    </div>
+  </header>
+
   <main class="container">
-    <header class="topbar">
-      {% include "showcase/includes/brand.html" %}
-
-      <p class="status">
-        Персональные данные
-      </p>
-    </header>
-
     <article class="privacy">
       <header class="privacy__header">
         <h1 class="privacy__title">
@@ -596,6 +601,15 @@
       </footer>
     </article>
   </main>
+
+  <footer class="site-footer privacy-site-footer">
+    <div class="container">
+      <div class="privacy-site-footer__inner">
+        <span>ФинПарус · Информационный сервис</span>
+        <span>18+</span>
+      </div>
+    </div>
+  </footer>
 
   {% include "showcase/includes/cookie_banner.html" %}
   

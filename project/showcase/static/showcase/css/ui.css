@@ -240,7 +240,7 @@ summary:focus-visible {
 }
 
 .btn--danger {
-  border-color: transparent;
+  border-color: var(--forest);
   background: var(--danger-soft);
   color: var(--danger);
 }
