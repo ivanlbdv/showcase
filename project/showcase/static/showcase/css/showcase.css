@@ -327,7 +327,8 @@
   border-radius: 50%;
 }
 
-.footer-legal__sign::before, .footer-legal__sign::after {
+.footer-legal__sign::before,
+.footer-legal__sign::after {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -341,6 +342,7 @@
 .footer-legal__sign::after {
   transform: translate(-50%, -50%) rotate(90deg);
 }
+
 .footer-legal[open] .footer-legal__sign::after {
   display: none;
 }
@@ -368,9 +370,11 @@
     gap: 24px;
     padding: 58px 0 44px;
   }
+
   .hero__note {
     max-width: 620px;
   }
+
   .products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -380,42 +384,54 @@
   .showcase-hero {
     padding: 42px 0 34px;
   }
+
   .hero__title {
     font-size: clamp(46px, 14vw, 66px);
   }
+
   .hero__note {
     font-size: 15px;
   }
+
   .hero__facts {
     gap: 10px;
   }
+
   .hero-fact strong {
     font-size: 15px;
   }
+
   .hero-fact span {
     font-size: 11px;
   }
+
   .section-heading {
     display: block;
     margin-top: 38px;
   }
+
   .section-heading p {
     margin-top: 10px;
   }
+
   .filters {
     margin-right: -16px;
   }
+
   .filters::-webkit-scrollbar {
     display: none;
   }
+
   .filter {
     flex: 0 0 auto;
   }
+
   .products {
     grid-template-columns: 1fr;
     gap: 12px;
     padding-bottom: 44px;
   }
+
   .card {
     min-height: 0;
     padding: 20px;
@@ -573,4 +589,58 @@
     font-size: 14px;
     line-height: 1.75;
   }
+}
+
+/* =========================================
+   Full-width page layout
+   ========================================= */
+
+/* Общий фон страницы */
+body {
+  background: var(--surface-soft);
+}
+
+/* Header */
+.site-header {
+  width: 100%;
+  background: var(--linen);
+}
+
+.site-header .topbar {
+  border-bottom-color: var(--line);
+}
+
+/* Footer */
+.site-footer {
+  width: 100%;
+  background: var(--charcoal);
+}
+
+.site-footer .disclaimer {
+  border-top: 0;
+  padding: 40px 0 32px;
+  color: var(--linen);
+}
+
+/* Контраст текста в footer */
+.site-footer .disclaimer__warning,
+.site-footer .disclaimer__age,
+.site-footer .disclaimer a,
+.site-footer .footer-legal__summary,
+.site-footer .footer-legal__name {
+  color: var(--lime);
+}
+
+/* Разделители */
+.site-footer .footer-legal {
+  border-bottom-color: rgb(226 246 213 / 28%);
+}
+
+.site-footer .footer-legal__sign {
+  border-color: var(--linen);
+}
+
+.site-footer .footer-legal__sign::before,
+.site-footer .footer-legal__sign::after {
+  background: var(--linen);
 }
