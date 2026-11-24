@@ -148,7 +148,7 @@
 
 .card--priority {
   border: 1px solid var(--line);
-  background: var(--surface-soft);
+  background: var(--paper);
   padding: 22px;
 }
 
